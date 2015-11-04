@@ -16,8 +16,7 @@ function Controller:click(pX, pY)
   local height = love.graphics:getHeight()
 
   local x, y = World.instance:transformToCoords(pX - width / 2, pY - height / 2)
-
-  World.instance.grid[x][y]:select()
+  World.instance:get(x, y):select()
 end
 
 return Controller

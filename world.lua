@@ -68,6 +68,16 @@ function World:draw()
   end
 end
 
+
+local deadTile = Tile:new(1000, 1000)
+-- Returns the tile on the board, or a tile that won't be rendered if coordinates do not match a tile
+function World:get(x, y)
+  if not self.grid[x] or not self.grid[x][y] then
+    return deadTile
+  end
+  return self.grid[x][y]
+end
+
 function World:eachTile()
   for x = -World.size, World.size do
     for y = World.size, -World.size, -1 do
