@@ -14,6 +14,8 @@ function love.load(arg)
 end
 
 local mouseDown = false
+local rDown = false
+local fDown = false
 function love.update(dt)
 
   if love.mouse.isDown('l') then
@@ -23,6 +25,24 @@ function love.update(dt)
     end
   else
     mouseDown = false
+  end
+
+  if love.keyboard.isDown('r')then
+    if not rDown then
+      controller:raise(love.mouse.getPosition())
+      rDown = true
+    end
+  else
+    rDown = false
+  end
+
+  if love.keyboard.isDown('f')then
+    if not fDown then
+      controller:lower(love.mouse.getPosition())
+      fDown = true
+    end
+  else
+    fDown = false
   end
 
   if love.keyboard.isDown('up') and Tile.tilt < .99 then

@@ -29,6 +29,16 @@ function Tile:select()
   end
 end
 
+function Tile:raise()
+  self.height = self.height + 1
+end
+
+function Tile:lower()
+  if self.height > 0 then
+    self.height = self.height - 1
+  end
+end
+
 function Tile:draw()
 
   local tileRaise = Tile.side * .7 * math.sqrt(1 - Tile.tilt * Tile.tilt)
