@@ -13,17 +13,16 @@ function love.load(arg)
   controller = Controller:new()
 end
 
-local buttonTimer = 0
+local mouseDown = false
 function love.update(dt)
 
-  buttonTimer = buttonTimer + dt
-  if buttonTimer < .2 then
-    return
-  end
-
   if love.mouse.isDown('l') then
-    controller:click(love.mouse.getPosition())
-    buttonTimer = 0
+    if not mouseDown then
+      controller:click(love.mouse.getPosition())
+      mouseDown = true
+    end
+  else
+    mouseDown = false
   end
 
   if love.keyboard.isDown('up') and Tile.tilt < .99 then

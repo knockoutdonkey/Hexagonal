@@ -42,7 +42,7 @@ function Unit:draw()
 
   -- Draw the player
   pixelX, pixelY = World.instance:transformToPixels(self.x, self.y)
-  love.graphics.circle("fill", pixelX, pixelY, 35)
+  love.graphics.circle("fill", pixelX, pixelY, 15)
 end
 
 return Unit
