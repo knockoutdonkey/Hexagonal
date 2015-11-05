@@ -13,7 +13,10 @@ end
 
 function Controller:mouseDown(pX, pY)
   local x, y = self:getScreenCoords(pX, pY)
-  World.instance:get(x, y):select()
+  local tile = World.instance:get(x, y)
+  if Tile.selected ~= tile then
+    tile:select()
+  end
 end
 
 function Controller:mouseMove(pX, pY)

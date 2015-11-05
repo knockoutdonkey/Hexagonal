@@ -19,7 +19,7 @@ function Unit:new(x, y, color)
   obj.x = x
   obj.y = y
   obj.color = color
-  obj.moveRange = 5
+  obj.moveRange = 3
   obj.jumpRange = 1
 
   obj.ready = true
@@ -96,13 +96,13 @@ function Unit:draw()
     if self.ready then
       love.graphics.setColor(220, 255, 40, 255)
     else
-      love.graphics.setColor(190, 225, 80, 255)
+      love.graphics.setColor(160, 180, 100, 255)
     end
   else
     if self.ready then
       love.graphics.setColor(255, 50, 50, 255)
     else
-      love.graphics.setColor(200, 100, 100, 255)
+      love.graphics.setColor(170, 100, 100, 255)
     end
   end
 
