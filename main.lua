@@ -13,23 +13,33 @@ function love.load(arg)
   controller = Controller:new()
 end
 
-local mouseDown = false
+local lMouseDown = false
+local rMouseDown = false
 local rDown = false
 local fDown = false
 function love.update(dt)
 
   if love.mouse.isDown('l') then
-    if not mouseDown then
-      controller:click(love.mouse.getPosition())
-      mouseDown = true
+    if not lMouseDown then
+      controller:leftClick(love.mouse.getPosition())
+      lMouseDown = true
     end
   else
-    mouseDown = false
+    lMouseDown = false
+  end
+
+  if love.mouse.isDown('r') then
+    if not rMouseDown then
+      controller:rightClick(love.mouse.getPosition())
+      rMouseDown = true
+    end
+  else
+    rMouseDown = false
   end
 
   if love.keyboard.isDown('r')then
     if not rDown then
-      controller:raise(love.mouse.getPosition())
+      controller:rClick(love.mouse.getPosition())
       rDown = true
     end
   else
@@ -38,7 +48,7 @@ function love.update(dt)
 
   if love.keyboard.isDown('f')then
     if not fDown then
-      controller:lower(love.mouse.getPosition())
+      controller:fClick(love.mouse.getPosition())
       fDown = true
     end
   else

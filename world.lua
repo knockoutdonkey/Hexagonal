@@ -38,7 +38,7 @@ function World:placeUnits()
     repeat
       x = math.random(-World.size, World.size)
       y = math.random(-World.size, World.size)
-    until not self.grid[x][y].item
+    until not self:get(x, y).item and not self:get(x, y).blocking
 
     local newUnit = Unit:new(x, y, 'yellow')
     self.grid[x][y].item = newUnit
@@ -50,11 +50,25 @@ function World:placeUnits()
     repeat
       x = math.random(-World.size, World.size)
       y = math.random(-World.size, World.size)
-    until not self.grid[x][y].item
+    until not self:get(x, y).item and not self:get(x, y).blocking
 
     local newUnit = Unit:new(x, y, 'red')
     self.grid[x][y].item = newUnit
     table.insert(self.enemyUnits, newUnit)
+  end
+end
+
+function World:moveSelectedTo(x, y)
+  if Tile.selected and Tile.selected.item then
+    local unit = Tile.selected.item
+    unit:moveTo(x, y)
+    Tile.selected:select()
+  end
+end
+
+function World:unhighlight()
+  for x, y, tile in self:tiles(root) do
+    tile.highlighted = false
   end
 end
 
@@ -63,9 +77,9 @@ function World:draw()
     tile:draw()
   end
 
-  if Tile.selected then
-    Tile.selected:draw()
-  end
+  -- if Tile.selected then
+  --   Tile.selected:draw()
+  -- end
 end
 
 
@@ -93,7 +107,7 @@ function World:tiles()
 end
 
 function World:transformToPixels(x, y)
-  local tile = self.grid[x][y]
+  local tile = self:get(x, y)
   local tileRaise = tile.side * tile.vertical * math.sqrt(1 - tile.tilt * tile.tilt)
   local pX = tile.side * 1.5 * (x + y)
   local pY = .866 * tile.side * tile.tilt * (x - y) - tile.height * tileRaise
@@ -106,7 +120,6 @@ function World:transformToCoords(pX, pY)
   -- local tileRaise = tile.side * tile.vertical * math.sqrt(1 - tile.tilt * tile.tilt)
   -- local y = ((pX) / (tile.side * 1.5) - (pY + tile.height * tileRaise) / (.866 * tile.side * tile.tilt)) / 2
   -- local x = (pX) / (tile.side * 1.5) - y
-  -- print(x, y)
   -- return x, y
   local tileRaise = Tile.side * Tile.vertical * math.sqrt(1 - Tile.tilt * Tile.tilt)
   local y = ((pX) / (Tile.side * 1.5) - (pY) / (.866 * Tile.side * Tile.tilt)) / 2
