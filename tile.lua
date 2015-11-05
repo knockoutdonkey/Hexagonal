@@ -15,7 +15,7 @@ function Tile:new(x, y)
   obj.y = y
   obj.height = nil
   obj.blocking = nil
-  obj:setHeight(math.random(0, 5)) -- use setter and getter to manipulate
+  obj:setHeight(math.random(0, 3)) -- use setter and getter to manipulate
   obj.shade = math.random(1, 80)
 
   obj.item = nil
@@ -66,10 +66,42 @@ end
 
 function Tile:draw()
 
+  -- determine correct color
+  local heightColor = {
+    r=100 + self.shade / 2,
+    g=50 + self.shade / 2,
+    b=10 + self.shade / 2,
+    a=255
+  }
+  local groundColor = {
+    r=50,
+    g=50 + 205 / 5 * self:getHeight(),
+    b=50,
+    a=255
+  }
+
+  if self:getHeight() == 0 then
+    groundColor.r = 100
+    groundColor.g = 100
+    groundColor.b = 255
+  end
+
+  if self.highlighted then
+    groundColor.r = 100 + 150 / 5 * self:getHeight()
+    groundColor.g = 75 + 90 / 5 * self:getHeight()
+    groundColor.b = 50
+  end
+
+  if Tile.selected == self then
+    groundColor.r = 255
+    groundColor.g = 255
+    groundColor.b = 255
+  end
+
   local tileRaise = Tile.side * .7 * math.sqrt(1 - Tile.tilt * Tile.tilt)
 
   -- draw height
-  love.graphics.setColor(100 + self.shade / 2, 50 + self.shade / 2, 10 + self.shade / 2, 255)
+  love.graphics.setColor(heightColor.r, heightColor.g, heightColor.b, heightColor.a)
   love.graphics.polygon('fill', Tile.side * (1 + self.x * 1.5 + self.y * 1.5), .866 * -Tile.side * Tile.tilt * (0 - self.x + self.y),
                                 Tile.side * (1 + self.x * 1.5 + self.y * 1.5), .866 * -Tile.side * Tile.tilt * (0 - self.x + self.y) - self:getHeight() * tileRaise,
                                 Tile.side * (.5 + self.x * 1.5 + self.y * 1.5), .866 * -Tile.side * Tile.tilt * (1 - self.x + self.y) - self:getHeight() * tileRaise,
@@ -80,45 +112,13 @@ function Tile:draw()
                                 Tile.side * (.5 + self.x * 1.5 + self.y * 1.5), .866 * -Tile.side * Tile.tilt * (-1 - self.x + self.y))
 
   -- draw ground
-  if self:getHeight() == 0 then
-    love.graphics.setColor(100, 100, 255, 255)
-  else
-    love.graphics.setColor(50, 50 + 205 / 5 * self:getHeight(), 50, 255)
-  end
+  love.graphics.setColor(groundColor.r, groundColor.g, groundColor.b, groundColor.a)
   love.graphics.polygon('fill', Tile.side * (1 + self.x * 1.5 + self.y * 1.5), .866 * -Tile.side * Tile.tilt * (0 - self.x + self.y) - self:getHeight() * tileRaise,
                                 Tile.side * (.5 + self.x * 1.5 + self.y * 1.5), .866 * -Tile.side * Tile.tilt * (1 - self.x + self.y) - self:getHeight() * tileRaise,
                                 Tile.side * (-.5 + self.x * 1.5 + self.y * 1.5), .866 * -Tile.side * Tile.tilt * (1 - self.x + self.y) - self:getHeight() * tileRaise,
                                 Tile.side * (-1 + self.x * 1.5 + self.y * 1.5), .866 * -Tile.side * Tile.tilt * (0 - self.x + self.y) - self:getHeight() * tileRaise,
                                 Tile.side * (-.5 + self.x * 1.5 + self.y * 1.5), .866 * -Tile.side * Tile.tilt * (-1 - self.x + self.y) - self:getHeight() * tileRaise,
                                 Tile.side * (.5 + self.x * 1.5 + self.y * 1.5), .866 * -Tile.side * Tile.tilt * (-1 - self.x + self.y) - self:getHeight() * tileRaise)
-
-  -- draw highlighted outline
-  if self.highlighted then
-    love.graphics.setColor(255, 100, 0, 255)
-    love.graphics.setLineWidth(3)
-    love.graphics.polygon('line', Tile.side * (1 + self.x * 1.5 + self.y * 1.5), .866 * -Tile.side * Tile.tilt * (0 - self.x + self.y),
-                                  Tile.side * (1 + self.x * 1.5 + self.y * 1.5), .866 * -Tile.side * Tile.tilt * (0 - self.x + self.y) - self:getHeight() * tileRaise - 1,
-                                  Tile.side * (.5 + self.x * 1.5 + self.y * 1.5), .866 * -Tile.side * Tile.tilt * (1 - self.x + self.y) - self:getHeight() * tileRaise - 1,
-                                  Tile.side * (-.5 + self.x * 1.5 + self.y * 1.5), .866 * -Tile.side * Tile.tilt * (1 - self.x + self.y) - self:getHeight() * tileRaise - 1,
-                                  Tile.side * (-1 + self.x * 1.5 + self.y * 1.5), .866 * -Tile.side * Tile.tilt * (0 - self.x + self.y) - self:getHeight() * tileRaise - 1,
-                                  Tile.side * (-1 + self.x * 1.5 + self.y * 1.5), .866 * -Tile.side * Tile.tilt * (0 - self.x + self.y),
-                                  Tile.side * (-.5 + self.x * 1.5 + self.y * 1.5), .866 * -Tile.side * Tile.tilt * (-1 - self.x + self.y),
-                                  Tile.side * (.5 + self.x * 1.5 + self.y * 1.5), .866 * -Tile.side * Tile.tilt * (-1 - self.x + self.y))
-  end
-
-  -- draw selected outline
-  if Tile.selected == self then
-    love.graphics.setColor(255, 255, 255, 255)
-    love.graphics.setLineWidth(3)
-    love.graphics.polygon('line', Tile.side * (1 + self.x * 1.5 + self.y * 1.5), .866 * -Tile.side * Tile.tilt * (0 - self.x + self.y),
-                                  Tile.side * (1 + self.x * 1.5 + self.y * 1.5), .866 * -Tile.side * Tile.tilt * (0 - self.x + self.y) - self:getHeight() * tileRaise - 1,
-                                  Tile.side * (.5 + self.x * 1.5 + self.y * 1.5), .866 * -Tile.side * Tile.tilt * (1 - self.x + self.y) - self:getHeight() * tileRaise - 1,
-                                  Tile.side * (-.5 + self.x * 1.5 + self.y * 1.5), .866 * -Tile.side * Tile.tilt * (1 - self.x + self.y) - self:getHeight() * tileRaise - 1,
-                                  Tile.side * (-1 + self.x * 1.5 + self.y * 1.5), .866 * -Tile.side * Tile.tilt * (0 - self.x + self.y) - self:getHeight() * tileRaise - 1,
-                                  Tile.side * (-1 + self.x * 1.5 + self.y * 1.5), .866 * -Tile.side * Tile.tilt * (0 - self.x + self.y),
-                                  Tile.side * (-.5 + self.x * 1.5 + self.y * 1.5), .866 * -Tile.side * Tile.tilt * (-1 - self.x + self.y),
-                                  Tile.side * (.5 + self.x * 1.5 + self.y * 1.5), .866 * -Tile.side * Tile.tilt * (-1 - self.x + self.y))
-  end
 
 
   if self.item then

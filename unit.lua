@@ -35,7 +35,7 @@ end
 function Unit:moveTo(x, y)
   local newTile = World.instance:get(x, y)
   local oldTile = World.instance:get(self.x, self.y)
-  if not newTile.blocking and not newTile.item and self.ready then
+  if not newTile.blocking and not newTile.item and self.ready and newTile.highlighted then
 
     self.x = x
     self.y = y
@@ -58,6 +58,10 @@ function Unit:select()
     function highlight(x, y, distanceLeft)
       local tile = World.instance:get(x,y)
       if distanceLeft < 0 or tile.blocking then
+        return
+      end
+
+      if tile.item and tile.item.color ~= self.color then
         return
       end
 
@@ -105,13 +109,6 @@ function Unit:draw()
   -- Draw the player
   pixelX, pixelY = World.instance:transformToPixels(self.x, self.y)
   love.graphics.circle("fill", pixelX, pixelY - math.sqrt(1 - Tile.tilt * Tile.tilt) * 15, 15)
-
-  -- Draw selected border
-  if Unit.selected == self then
-    love.graphics.setColor(255, 255, 255, 255)
-    love.graphics.setLineWidth(3)
-    love.graphics.circle("line", pixelX, pixelY - math.sqrt(1 - Tile.tilt * Tile.tilt) * 15, 15)
-  end
 end
 
 return Unit

@@ -29,6 +29,9 @@ function World:new()
 
   obj:placeUnits()
 
+  obj.deadTile = Tile:new(1000, 1000)
+  obj.deadTile:setHeight(1000)
+
   return obj
 end
 
@@ -82,12 +85,10 @@ function World:draw()
   -- end
 end
 
-
-local deadTile = Tile:new(1000, 1000)
 -- Returns the tile on the board, or a tile that won't be rendered if coordinates do not match a tile
 function World:get(x, y)
   if not self.grid[x] or not self.grid[x][y] then
-    return deadTile
+    return self.deadTile
   end
   return self.grid[x][y]
 end
