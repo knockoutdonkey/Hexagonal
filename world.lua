@@ -62,10 +62,14 @@ function World:placeUnits()
 end
 
 function World:moveSelectedTo(x, y)
+
   if Tile.selected and Tile.selected.item then
     local unit = Tile.selected.item
-    unit:moveTo(x, y)
-    Tile.selected:select()
+
+    if unit.x ~= x or unit.y ~= y then
+      unit:moveTo(x, y)
+      Tile.selected:select()
+    end
   end
 end
 
@@ -79,10 +83,6 @@ function World:draw()
   for x, y, tile in self:tiles(root) do
     tile:draw()
   end
-
-  -- if Tile.selected then
-  --   Tile.selected:draw()
-  -- end
 end
 
 -- Returns the tile on the board, or a tile that won't be rendered if coordinates do not match a tile
