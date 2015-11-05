@@ -15,7 +15,7 @@ function Tile:new(x, y)
   obj.y = y
   obj.height = nil
   obj.blocking = nil
-  obj:setHeight(math.random(0, 3)) -- use setter and getter to manipulate
+  obj:setHeight(math.random(0, 5)) -- use setter and getter to manipulate
   obj.shade = math.random(1, 80)
 
   obj.item = nil
@@ -87,9 +87,9 @@ function Tile:draw()
   end
 
   if self.highlighted then
-    groundColor.r = 100 + 150 / 5 * self:getHeight()
-    groundColor.g = 75 + 90 / 5 * self:getHeight()
-    groundColor.b = 50
+    groundColor.r = 70 + 185 / 5 * self:getHeight()
+    groundColor.g = 75 + 50 / 5 * self:getHeight()
+    groundColor.b = 70 + 185 / 5 * self:getHeight()
   end
 
   if Tile.selected == self then
