@@ -22,6 +22,11 @@ function Unit:new(x, y, color)
   obj.moveRange = 3
   obj.jumpRange = 1
 
+  obj.maxHealth = 10
+  obj.health = obj.maxHealth
+
+  obj.attacks = {Attack:new(self), Attack:new(self)}
+
   obj.ready = true
 
   return obj
@@ -108,7 +113,14 @@ function Unit:draw()
 
   -- Draw the player
   pixelX, pixelY = World.instance:transformToPixels(self.x, self.y)
-  love.graphics.circle("fill", pixelX, pixelY - math.sqrt(1 - Tile.tilt * Tile.tilt) * 15, 15)
+  local playerRadius = 15
+  love.graphics.circle("fill", pixelX, pixelY - math.sqrt(1 - Tile.tilt * Tile.tilt) * playerRadius, playerRadius)
+
+  -- Draw the health bar
+  local healthLength = 30
+  local healthHeight = 5
+  love.graphics.setColor(255, 0, 255, 255)
+  love.graphics.rectangle("fill", pixelX - healthLength / 2, pixelY - healthHeight / 2 - playerRadius * (1.4 + math.sqrt(1 - Tile.tilt * Tile.tilt)), healthLength * self.health / self.maxHealth , healthHeight)
 end
 
 return Unit

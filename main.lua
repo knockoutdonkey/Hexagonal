@@ -1,7 +1,10 @@
-Tile = require('tile')
-Controller = require('controller')
-Unit = require('unit')
 World = require('world')
+Tile = require('tile')
+Unit = require('unit')
+Attack = require('attack')
+Controller = require('controller')
+
+
 
 -- render correctly
 
