@@ -21,7 +21,6 @@ end
 
 function Controller:mouseMove(pX, pY)
   local x, y = self:getScreenCoords(pX, pY)
-  print(x, y)
 end
 
 function Controller:mouseUp(pX, pY)

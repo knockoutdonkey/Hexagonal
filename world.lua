@@ -27,10 +27,10 @@ function World:new()
   obj.playerUnits = {}
   obj.enemyUnits = {}
 
-  obj:placeUnits()
-
   obj.deadTile = Tile:new(1000, 1000)
   obj.deadTile:setHeight(1000)
+
+  obj:placeUnits()
 
   return obj
 end
@@ -56,6 +56,7 @@ function World:placeUnits()
     until not self:get(x, y).item and not self:get(x, y).blocking
 
     local newUnit = Unit:new(x, y, 'red')
+    newUnit.ready = false
     self.grid[x][y].item = newUnit
     table.insert(self.enemyUnits, newUnit)
   end
@@ -69,6 +70,33 @@ function World:moveSelectedTo(x, y)
     if unit.x ~= x or unit.y ~= y then
       unit:moveTo(x, y)
       Tile.selected:select()
+    end
+  end
+
+  -- check to see if the turn is over
+  local currentUnits = nil
+  local otherUnits = nil
+  if self.playersTurn then
+    currentUnits = self.playerUnits
+    otherUnits = self.enemyUnits
+  else
+    currentUnits = self.enemyUnits
+    otherUnits = self.playerUnits
+  end
+
+  local readyToMove = 0
+  for i, unit in ipairs(currentUnits) do
+    if unit.ready then
+      readyToMove = readyToMove + 1
+    end
+  end
+
+  -- make other team ready to go
+  if readyToMove <= 0 then
+    self.playersTurn = not self.playersTurn
+
+    for i, unit in ipairs(otherUnits) do
+      unit.ready = true
     end
   end
 end
