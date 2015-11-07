@@ -111,6 +111,10 @@ function World:draw()
   for x, y, tile in self:tiles(root) do
     tile:draw()
   end
+
+  if Unit.selected then
+    Unit.selected:drawAttacks()
+  end
 end
 
 -- Returns the tile on the board, or a tile that won't be rendered if coordinates do not match a tile

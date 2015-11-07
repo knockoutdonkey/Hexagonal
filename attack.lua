@@ -29,8 +29,8 @@ function Attack:getRange()
 end
 
 function Attack:draw(x, y)
-  love.graphics.setColor(255, 0, 0, 0)
-  love.graphics.rectangle(x - 30, y - 30, 30, 30)
+  love.graphics.setColor(255, 0, 0, 255)
+  love.graphics.rectangle("fill", x - 30, y - 30, 60, 60)
 end
 
 return Attack

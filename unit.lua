@@ -123,4 +123,14 @@ function Unit:draw()
   love.graphics.rectangle("fill", pixelX - healthLength / 2, pixelY - healthHeight / 2 - playerRadius * (1.4 + math.sqrt(1 - Tile.tilt * Tile.tilt)), healthLength * self.health / self.maxHealth , healthHeight)
 end
 
+function Unit:drawAttacks()
+  for i, attack in ipairs(self.attacks) do
+    local screenWidth = love.graphics.getWidth()
+    local screenHeight = love.graphics.getHeight()
+    local attackBorder = 70
+
+    attack:draw(attackBorder * i - screenWidth / 2, screenHeight / 2 - attackBorder)
+  end
+end
+
 return Unit
