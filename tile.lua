@@ -15,8 +15,7 @@ function Tile:new(x, y)
   obj.y = y
   obj.height = nil
   obj.blocking = nil
-  obj:setHeight(math.random(0, 5)) -- use setter and getter to manipulate
-  obj.shade = math.random(1, 80)
+  obj:setHeight(math.random(0, 3)) -- use setter and getter to manipulate
 
   obj.item = nil
   obj.highlighted = false
@@ -67,12 +66,6 @@ end
 function Tile:draw()
 
   -- determine correct color
-  local heightColor = {
-    r=100 + self.shade / 2,
-    g=50 + self.shade / 2,
-    b=10 + self.shade / 2,
-    a=255
-  }
   local groundColor = {
     r=50,
     g=50 + 205 / 5 * self:getHeight(),
@@ -101,15 +94,17 @@ function Tile:draw()
   local tileRaise = Tile.side * .7 * math.sqrt(1 - Tile.tilt * Tile.tilt)
 
   -- draw height
-  love.graphics.setColor(heightColor.r, heightColor.g, heightColor.b, heightColor.a)
-  love.graphics.polygon('fill', Tile.side * (1 + self.x * 1.5 + self.y * 1.5), .866 * -Tile.side * Tile.tilt * (0 - self.x + self.y),
-                                Tile.side * (1 + self.x * 1.5 + self.y * 1.5), .866 * -Tile.side * Tile.tilt * (0 - self.x + self.y) - self:getHeight() * tileRaise,
-                                Tile.side * (.5 + self.x * 1.5 + self.y * 1.5), .866 * -Tile.side * Tile.tilt * (1 - self.x + self.y) - self:getHeight() * tileRaise,
-                                Tile.side * (-.5 + self.x * 1.5 + self.y * 1.5), .866 * -Tile.side * Tile.tilt * (1 - self.x + self.y) - self:getHeight() * tileRaise,
-                                Tile.side * (-1 + self.x * 1.5 + self.y * 1.5), .866 * -Tile.side * Tile.tilt * (0 - self.x + self.y) - self:getHeight() * tileRaise,
-                                Tile.side * (-1 + self.x * 1.5 + self.y * 1.5), .866 * -Tile.side * Tile.tilt * (0 - self.x + self.y),
-                                Tile.side * (-.5 + self.x * 1.5 + self.y * 1.5), .866 * -Tile.side * Tile.tilt * (-1 - self.x + self.y),
-                                Tile.side * (.5 + self.x * 1.5 + self.y * 1.5), .866 * -Tile.side * Tile.tilt * (-1 - self.x + self.y))
+  for level = 0, self:getHeight() - 1 do
+    love.graphics.setColor(100 + 100 * level / 5, 50 + 75 * level / 5, 10 + 50 * level / 5, 255)
+    love.graphics.polygon('fill', Tile.side * (1 + self.x * 1.5 + self.y * 1.5), .866 * -Tile.side * Tile.tilt * (0 - self.x + self.y) - level * tileRaise,
+                                  Tile.side * (1 + self.x * 1.5 + self.y * 1.5), .866 * -Tile.side * Tile.tilt * (0 - self.x + self.y) - (level + 1) * tileRaise,
+                                  Tile.side * (.5 + self.x * 1.5 + self.y * 1.5), .866 * -Tile.side * Tile.tilt * (1 - self.x + self.y) - (level + 1) * tileRaise,
+                                  Tile.side * (-.5 + self.x * 1.5 + self.y * 1.5), .866 * -Tile.side * Tile.tilt * (1 - self.x + self.y) - (level + 1) * tileRaise,
+                                  Tile.side * (-1 + self.x * 1.5 + self.y * 1.5), .866 * -Tile.side * Tile.tilt * (0 - self.x + self.y) - (level + 1) * tileRaise,
+                                  Tile.side * (-1 + self.x * 1.5 + self.y * 1.5), .866 * -Tile.side * Tile.tilt * (0 - self.x + self.y) - level * tileRaise,
+                                  Tile.side * (-.5 + self.x * 1.5 + self.y * 1.5), .866 * -Tile.side * Tile.tilt * (-1 - self.x + self.y) - level * tileRaise,
+                                  Tile.side * (.5 + self.x * 1.5 + self.y * 1.5), .866 * -Tile.side * Tile.tilt * (-1 - self.x + self.y) - level * tileRaise)
+  end
 
   -- draw ground
   love.graphics.setColor(groundColor.r, groundColor.g, groundColor.b, groundColor.a)
