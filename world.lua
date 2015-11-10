@@ -29,7 +29,7 @@ function World:new()
 
   obj.selectedAttack = nil
 
-  obj.deadTile = Tile:new(1000, 1000)
+  obj.deadTile = Tile:new(1000, 0)
   obj.deadTile:setHeight(1000)
 
   obj:placeUnits()
@@ -184,7 +184,7 @@ function World:transformToPixels(coord)
   return pX, pY
 end
 
--- TODO: Make sure that it can select things at different heights
+-- Takes height of tile into account
 function World:transformToCoords(pX, pY)
   -- local tile = self.grid[x][y]
   -- local tileRaise = tile.side * tile.vertical * math.sqrt(1 - tile.tilt * tile.tilt)
@@ -194,7 +194,21 @@ function World:transformToCoords(pX, pY)
   local tileRaise = Tile.side * Tile.vertical * math.sqrt(1 - Tile.tilt * Tile.tilt)
   local y = ((pX) / (Tile.side * 1.5) - (pY) / (.866 * Tile.side * Tile.tilt)) / 2
   local x = (pX) / (Tile.side * 1.5) - y
-  return HexCoord:new(math.floor(x + .5), math.floor(y + .5))
+  x = math.floor(x + .5)
+  y = math.floor(y + .5)
+  local coord = HexCoord:new(x, y)
+
+  -- check for tiles in front
+  local forwardTile = self:get(coord:add(HexCoord:new(1, -1)))
+  local newPX, newPY = self:transformToPixels(forwardTile.coord)
+
+  while newPY < pY + Tile.side * .866 do
+    print('moving')
+    coord = forwardTile.coord
+    forwardTile = self:get(coord:add(HexCoord:new(1, -1)))
+    newPX, newPY = self:transformToPixels(forwardTile.coord)
+  end
+  return coord
 end
 
 return World
