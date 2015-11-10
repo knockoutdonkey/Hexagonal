@@ -12,11 +12,7 @@ function Controller:new()
 end
 
 function Controller:mouseDown(pX, pY)
-  local x, y = self:getScreenCoords(pX, pY)
-  local tile = World.instance:get(x, y)
-  if Tile.selected ~= tile then
-    tile:select()
-  end
+  ClickManager.instance:click(pX, pY)
 end
 
 function Controller:mouseMove(pX, pY)
@@ -24,8 +20,7 @@ function Controller:mouseMove(pX, pY)
 end
 
 function Controller:mouseUp(pX, pY)
-  local x, y = self:getScreenCoords(pX, pY)
-  World.instance:moveSelectedTo(x, y)
+  ClickManager.instance:endClick(pX, pY)
 end
 
 function Controller:rClick(pX, pY)

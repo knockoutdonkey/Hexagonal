@@ -20,6 +20,8 @@ function Tile:new(x, y)
   obj.item = nil
   obj.highlighted = false
 
+  obj.attackHighlighted = false
+
   return obj
 end
 
@@ -83,6 +85,12 @@ function Tile:draw()
     groundColor.r = 70 + 185 / 5 * self:getHeight()
     groundColor.g = 75 + 50 / 5 * self:getHeight()
     groundColor.b = 70 + 185 / 5 * self:getHeight()
+  end
+
+  if self.attackHighlighted then
+    groundColor.r = 255 + 0 / 5 * self:getHeight()
+    groundColor.g = 0 + 0 / 5 * self:getHeight()
+    groundColor.b = 0 + 0 / 5 * self:getHeight()
   end
 
   if Tile.selected == self then

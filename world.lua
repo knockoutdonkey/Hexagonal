@@ -27,6 +27,8 @@ function World:new()
   obj.playerUnits = {}
   obj.enemyUnits = {}
 
+  obj.selectedAttack = nil
+
   obj.deadTile = Tile:new(1000, 1000)
   obj.deadTile:setHeight(1000)
 
@@ -60,6 +62,36 @@ function World:placeUnits()
     self.grid[x][y].item = newUnit
     table.insert(self.enemyUnits, newUnit)
   end
+end
+
+function World:showAttackRange(attackNum)
+  self:unhighlight()
+  local unit = Unit.selected
+  if unit then
+    local attack = unit.attacks[attackNum]
+    self.selectedAttack = attack
+    for i, coord in ipairs(attack:getRange()) do
+      self:get(coord.x, coord.y).attackHighlighted = true
+    end
+  else
+    print('Error: no selected unit to show attack range')
+  end
+end
+
+function World:attack(x, y)
+  local attackResult = false
+  local tile = self:get(x, y)
+  if self.selectedAttack then
+    -- returns true if the attack did something
+    attackResult = self.selectedAttack:perform(tile)
+
+    -- only reset selected attack, if an attack happened
+    if attackResult then
+      self.selectedAttack = nil
+    end
+  else
+  end
+  return attackResult
 end
 
 function World:moveSelectedTo(x, y)
@@ -104,6 +136,7 @@ end
 function World:unhighlight()
   for x, y, tile in self:tiles(root) do
     tile.highlighted = false
+    tile.attackHighlighted = false
   end
 end
 

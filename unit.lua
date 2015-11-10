@@ -25,7 +25,7 @@ function Unit:new(x, y, color)
   obj.maxHealth = 10
   obj.health = obj.maxHealth
 
-  obj.attacks = {Attack:new(self), Attack:new(self)}
+  obj.attacks = {Attack:new(obj), Attack:new(obj)}
 
   obj.ready = true
 
@@ -53,7 +53,6 @@ function Unit:moveTo(x, y)
 end
 
 function Unit:select()
-
   World.instance:unhighlight()
   if Unit.selected == self then
     Unit.selected = nil
@@ -92,6 +91,18 @@ function Unit:select()
 
     highlight(self.x, self.y, self.moveRange)
   end
+end
+
+function Unit:damage(damage)
+  self.health = self.health - damage
+  if self.health <= 0 then
+    self.health = 0
+    self:kill()
+  end
+end
+
+function Unit:kill()
+  print('Oh no', self.x, self.y, 'is dead')
 end
 
 function Unit:draw()

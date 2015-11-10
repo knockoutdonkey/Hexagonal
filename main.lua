@@ -3,8 +3,7 @@ Tile = require('tile')
 Unit = require('unit')
 Attack = require('attack')
 Controller = require('controller')
-
-
+ClickManager = require('clickManager')
 
 -- render correctly
 
@@ -14,6 +13,7 @@ function love.load(arg)
 
   world = World:new()
   controller = Controller:new()
+  clickManager = ClickManager:new()
 end
 
 local mouseDown = false

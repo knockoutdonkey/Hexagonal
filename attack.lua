@@ -14,9 +14,20 @@ function Attack:new(unit)
   return obj
 end
 
+-- returns whether or not the attack did anything
+function Attack:perform(tile)
+  local unit = tile.item
+  if unit then
+    unit:damage(self.damage)
+    return true
+  else
+    return false
+  end
+end
+
 function Attack:getRange()
-  local x = obj.unit.x
-  local y = obj.unit.y
+  local x = self.unit.x
+  local y = self.unit.y
 
   return {
     {x=x  , y=y+1},
