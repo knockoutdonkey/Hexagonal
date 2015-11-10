@@ -93,8 +93,12 @@ function World:attack(coord)
     else
       self.selectedAttack = nil
     end
-  else
   end
+
+  if attackResult then
+    self:checkEndTurn()
+  end
+
   return attackResult
 end
 
@@ -108,7 +112,9 @@ function World:moveSelectedTo(coord)
       Tile.selected:select()
     end
   end
+end
 
+function World:checkEndTurn()
   -- check to see if the turn is over
   local currentUnits = nil
   local otherUnits = nil
@@ -132,7 +138,7 @@ function World:moveSelectedTo(coord)
     self.playersTurn = not self.playersTurn
 
     for i, unit in ipairs(otherUnits) do
-      unit.ready = true
+      unit:startTurn()
     end
   end
 end
