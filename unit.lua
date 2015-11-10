@@ -26,9 +26,20 @@ function Unit:new(coord, color)
 
   obj.attacks = {Attack:new(obj), Attack:new(obj)}
 
+  obj.movesLeft = obj.moveRange
   obj.ready = true
 
   return obj
+end
+
+function Unit:startTurn()
+  self.movesLeft = self.moveRange
+  self.ready = true
+end
+
+function Unit:endTurn()
+  self.movesLeft = 0
+  self.ready = false
 end
 
 --TODO: check for hit collision before moving
@@ -39,14 +50,13 @@ end
 function Unit:moveTo(nextCoord)
   local newTile = World.instance:get(nextCoord)
   local oldTile = World.instance:get(self.coord)
-  if not newTile.blocking and not newTile.item and self.ready and newTile.highlighted then
+  if not newTile.blocking and not newTile.item and self.movesLeft and newTile.highlighted then
 
+    self.movesLeft = self.movesLeft - self.coord:getDistance(nextCoord)
     self.coord = nextCoord:copy()
 
     oldTile.item = nil
     newTile.item = self
-
-    self.ready = false
   end
 end
 
@@ -77,7 +87,7 @@ function Unit:select()
       end
     end
 
-    highlight(self.coord, self.moveRange)
+    highlight(self.coord, self.movesLeft)
   end
 end
 

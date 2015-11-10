@@ -37,4 +37,20 @@ function HexCoord:add(otherCoord)
   return HexCoord:new(self.x + otherCoord.x, self.y + otherCoord.y)
 end
 
+function HexCoord:subtract(otherCoord)
+  return HexCoord:new(self.x - otherCoord.x, self.y - otherCoord.y)
+end
+
+-- get distance between two coords or from the origin
+function HexCoord:getDistance(otherCoord)
+  otherCoord = otherCoord or HexCoord:new(0, 0)
+
+  local diffCoord = self:subtract(otherCoord)
+  if (diffCoord.x > 0 and diffCoord.y < 0) or (diffCoord.x < 0 and diffCoord.y > 0) then
+    return math.max(math.abs(diffCoord.x), math.abs(diffCoord.y))
+  else
+    return math.abs(diffCoord.x + diffCoord.y)
+  end
+end
+
 return HexCoord

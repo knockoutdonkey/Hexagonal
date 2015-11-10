@@ -97,9 +97,9 @@ function Tile:draw()
   end
 
   if self.attackHighlighted then
-    groundColor.r = 255 + 0 / 5 * self:getHeight()
-    groundColor.g = 0 + 0 / 5 * self:getHeight()
-    groundColor.b = 0 + 0 / 5 * self:getHeight()
+    groundColor.r = 150 + 105 / 5 * self:getHeight()
+    groundColor.g = 50 + 0 / 5 * self:getHeight()
+    groundColor.b = 50 + 0 / 5 * self:getHeight()
   end
 
   if Tile.selected == self then
