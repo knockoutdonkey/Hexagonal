@@ -1,7 +1,13 @@
 World = require('world')
 Tile = require('tile')
+
 Unit = require('unit')
+Commando = require('commando')
+
 Attack = require('attack')
+Fire = require('fire')
+Outpost = require('outpost')
+
 Controller = require('controller')
 ClickManager = require('clickManager')
 HexCoord = require('hexCoord')

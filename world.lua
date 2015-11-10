@@ -45,7 +45,7 @@ function World:placeUnits()
                                math.random(-World.size, World.size))
     until not self:get(randomCoord).item and not self:get(randomCoord).blocking
 
-    local newUnit = Unit:new(randomCoord, 'yellow')
+    local newUnit = Commando:new(randomCoord, 'yellow')
     self:get(randomCoord).item = newUnit
     table.insert(self.playerUnits, newUnit)
   end
@@ -57,7 +57,7 @@ function World:placeUnits()
                                math.random(-World.size, World.size))
     until not self:get(randomCoord).item and not self:get(randomCoord).blocking
 
-    local newUnit = Unit:new(randomCoord, 'red')
+    local newUnit = Commando:new(randomCoord, 'red')
     newUnit.ready = false
     self:get(randomCoord).item = newUnit
     table.insert(self.enemyUnits, newUnit)
@@ -203,7 +203,6 @@ function World:transformToCoords(pX, pY)
   local newPX, newPY = self:transformToPixels(forwardTile.coord)
 
   while newPY < pY + Tile.side * .866 do
-    print('moving')
     coord = forwardTile.coord
     forwardTile = self:get(coord:add(HexCoord:new(1, -1)))
     newPX, newPY = self:transformToPixels(forwardTile.coord)

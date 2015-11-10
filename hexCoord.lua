@@ -25,6 +25,21 @@ function HexCoord:getNeighbors()
   }
 end
 
+function HexCoord:getAllWithin(maxRange, minRange)
+  minRange = minRange or 0
+
+  results = {}
+  for x = -maxRange, maxRange do
+    for y = -maxRange, maxRange do
+      local nextCoord = HexCoord:new(self.x + x, self.y + y)
+      if math.abs(x + y) <= maxRange and nextCoord:getDistance(self) >= minRange then
+        table.insert(results, nextCoord)
+      end
+    end
+  end
+  return results
+end
+
 function HexCoord:copy()
   return HexCoord:new(self.x, self.y)
 end

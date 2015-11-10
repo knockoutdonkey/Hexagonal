@@ -4,6 +4,7 @@ Unit.selected = nil
 
 function Unit:new(coord, color)
 
+  -- Class setup
   local obj = {}
   setmetatable(obj, self)
   self.__index = self
@@ -18,18 +19,22 @@ function Unit:new(coord, color)
 
   obj.coord = coord:copy()
   obj.color = color
+
+  -- These are unique to this unit
   obj.moveRange = 3
   obj.jumpRange = 1
-
   obj.maxHealth = 10
-  obj.health = obj.maxHealth
-
   obj.attacks = {Attack:new(obj), Attack:new(obj)}
 
-  obj.movesLeft = obj.moveRange
-  obj.ready = true
+  obj:setUp()
 
   return obj
+end
+
+function Unit:setUp()
+  self.health = self.maxHealth
+  self.movesLeft = self.moveRange
+  self.ready = true
 end
 
 function Unit:startTurn()
