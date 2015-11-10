@@ -1,12 +1,12 @@
 World = require('world')
 Tile = require('tile')
 
-Unit = require('unit')
-Commando = require('commando')
+Unit = require('units/unit')
+Commando = require('units/commando')
 
-Attack = require('attack')
-Fire = require('fire')
-Outpost = require('outpost')
+Attack = require('attacks/attack')
+Fire = require('attacks/commando/fire')
+Outpost = require('attacks/commando/outpost')
 
 Controller = require('controller')
 ClickManager = require('clickManager')
