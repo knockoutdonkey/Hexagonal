@@ -4,6 +4,7 @@ Unit = require('unit')
 Attack = require('attack')
 Controller = require('controller')
 ClickManager = require('clickManager')
+HexCoord = require('hexCoord')
 
 -- render correctly
 

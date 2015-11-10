@@ -26,22 +26,12 @@ function Attack:perform(tile)
 end
 
 function Attack:getRange()
-  local x = self.unit.x
-  local y = self.unit.y
-
-  return {
-    {x=x  , y=y+1},
-    {x=x+1, y=y  },
-    {x=x+1, y=y-1},
-    {x=x  , y=y-1},
-    {x=x-1, y=y  },
-    {x=x-1, y=y+1}
-  }
+  return self.unit.coord:getNeighbors()
 end
 
-function Attack:draw(x, y)
+function Attack:draw(pX, pY)
   love.graphics.setColor(255, 0, 0, 255)
-  love.graphics.rectangle("fill", x - 30, y - 30, 60, 60)
+  love.graphics.rectangle("fill", pX - 30, pY - 30, 60, 60)
 end
 
 return Attack

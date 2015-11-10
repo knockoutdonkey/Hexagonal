@@ -5,14 +5,22 @@ Tile.tilt = .8
 Tile.vertical = .7
 Tile.selected = nil
 
-function Tile:new(x, y)
+function Tile:new(coordOrX, y)
 
   local obj = {}
   setmetatable(obj, self)
   self.__index = self
 
-  obj.x = x
-  obj.y = y
+
+  if y then
+    -- given x/y parameters
+    obj.coord = HexCoord:new(coordOrX, y)
+  else
+    -- given coordinate parameter
+    obj.coord = coordOrX:copy()
+  end
+
+
   obj.height = nil
   obj.blocking = nil
   obj:setHeight(math.random(0, 3)) -- use setter and getter to manipulate
@@ -25,6 +33,7 @@ function Tile:new(x, y)
   return obj
 end
 
+-- select tile and any unit that may be on it
 function Tile:select()
   if Tile.selected == self then
     Tile.selected = nil
@@ -104,24 +113,24 @@ function Tile:draw()
   -- draw height
   for level = 0, self:getHeight() - 1 do
     love.graphics.setColor(100 + 100 * level / 5, 50 + 75 * level / 5, 10 + 50 * level / 5, 255)
-    love.graphics.polygon('fill', Tile.side * (1 + self.x * 1.5 + self.y * 1.5), .866 * -Tile.side * Tile.tilt * (0 - self.x + self.y) - level * tileRaise,
-                                  Tile.side * (1 + self.x * 1.5 + self.y * 1.5), .866 * -Tile.side * Tile.tilt * (0 - self.x + self.y) - (level + 1) * tileRaise,
-                                  Tile.side * (.5 + self.x * 1.5 + self.y * 1.5), .866 * -Tile.side * Tile.tilt * (1 - self.x + self.y) - (level + 1) * tileRaise,
-                                  Tile.side * (-.5 + self.x * 1.5 + self.y * 1.5), .866 * -Tile.side * Tile.tilt * (1 - self.x + self.y) - (level + 1) * tileRaise,
-                                  Tile.side * (-1 + self.x * 1.5 + self.y * 1.5), .866 * -Tile.side * Tile.tilt * (0 - self.x + self.y) - (level + 1) * tileRaise,
-                                  Tile.side * (-1 + self.x * 1.5 + self.y * 1.5), .866 * -Tile.side * Tile.tilt * (0 - self.x + self.y) - level * tileRaise,
-                                  Tile.side * (-.5 + self.x * 1.5 + self.y * 1.5), .866 * -Tile.side * Tile.tilt * (-1 - self.x + self.y) - level * tileRaise,
-                                  Tile.side * (.5 + self.x * 1.5 + self.y * 1.5), .866 * -Tile.side * Tile.tilt * (-1 - self.x + self.y) - level * tileRaise)
+    love.graphics.polygon('fill', Tile.side * (1 + self.coord.x * 1.5 + self.coord.y * 1.5), .866 * -Tile.side * Tile.tilt * (0 - self.coord.x + self.coord.y) - level * tileRaise,
+                                  Tile.side * (1 + self.coord.x * 1.5 + self.coord.y * 1.5), .866 * -Tile.side * Tile.tilt * (0 - self.coord.x + self.coord.y) - (level + 1) * tileRaise,
+                                  Tile.side * (.5 + self.coord.x * 1.5 + self.coord.y * 1.5), .866 * -Tile.side * Tile.tilt * (1 - self.coord.x + self.coord.y) - (level + 1) * tileRaise,
+                                  Tile.side * (-.5 + self.coord.x * 1.5 + self.coord.y * 1.5), .866 * -Tile.side * Tile.tilt * (1 - self.coord.x + self.coord.y) - (level + 1) * tileRaise,
+                                  Tile.side * (-1 + self.coord.x * 1.5 + self.coord.y * 1.5), .866 * -Tile.side * Tile.tilt * (0 - self.coord.x + self.coord.y) - (level + 1) * tileRaise,
+                                  Tile.side * (-1 + self.coord.x * 1.5 + self.coord.y * 1.5), .866 * -Tile.side * Tile.tilt * (0 - self.coord.x + self.coord.y) - level * tileRaise,
+                                  Tile.side * (-.5 + self.coord.x * 1.5 + self.coord.y * 1.5), .866 * -Tile.side * Tile.tilt * (-1 - self.coord.x + self.coord.y) - level * tileRaise,
+                                  Tile.side * (.5 + self.coord.x * 1.5 + self.coord.y * 1.5), .866 * -Tile.side * Tile.tilt * (-1 - self.coord.x + self.coord.y) - level * tileRaise)
   end
 
   -- draw ground
   love.graphics.setColor(groundColor.r, groundColor.g, groundColor.b, groundColor.a)
-  love.graphics.polygon('fill', Tile.side * (1 + self.x * 1.5 + self.y * 1.5), .866 * -Tile.side * Tile.tilt * (0 - self.x + self.y) - self:getHeight() * tileRaise,
-                                Tile.side * (.5 + self.x * 1.5 + self.y * 1.5), .866 * -Tile.side * Tile.tilt * (1 - self.x + self.y) - self:getHeight() * tileRaise,
-                                Tile.side * (-.5 + self.x * 1.5 + self.y * 1.5), .866 * -Tile.side * Tile.tilt * (1 - self.x + self.y) - self:getHeight() * tileRaise,
-                                Tile.side * (-1 + self.x * 1.5 + self.y * 1.5), .866 * -Tile.side * Tile.tilt * (0 - self.x + self.y) - self:getHeight() * tileRaise,
-                                Tile.side * (-.5 + self.x * 1.5 + self.y * 1.5), .866 * -Tile.side * Tile.tilt * (-1 - self.x + self.y) - self:getHeight() * tileRaise,
-                                Tile.side * (.5 + self.x * 1.5 + self.y * 1.5), .866 * -Tile.side * Tile.tilt * (-1 - self.x + self.y) - self:getHeight() * tileRaise)
+  love.graphics.polygon('fill', Tile.side * (1 + self.coord.x * 1.5 + self.coord.y * 1.5), .866 * -Tile.side * Tile.tilt * (0 - self.coord.x + self.coord.y) - self:getHeight() * tileRaise,
+                                Tile.side * (.5 + self.coord.x * 1.5 + self.coord.y * 1.5), .866 * -Tile.side * Tile.tilt * (1 - self.coord.x + self.coord.y) - self:getHeight() * tileRaise,
+                                Tile.side * (-.5 + self.coord.x * 1.5 + self.coord.y * 1.5), .866 * -Tile.side * Tile.tilt * (1 - self.coord.x + self.coord.y) - self:getHeight() * tileRaise,
+                                Tile.side * (-1 + self.coord.x * 1.5 + self.coord.y * 1.5), .866 * -Tile.side * Tile.tilt * (0 - self.coord.x + self.coord.y) - self:getHeight() * tileRaise,
+                                Tile.side * (-.5 + self.coord.x * 1.5 + self.coord.y * 1.5), .866 * -Tile.side * Tile.tilt * (-1 - self.coord.x + self.coord.y) - self:getHeight() * tileRaise,
+                                Tile.side * (.5 + self.coord.x * 1.5 + self.coord.y * 1.5), .866 * -Tile.side * Tile.tilt * (-1 - self.coord.x + self.coord.y) - self:getHeight() * tileRaise)
 
 
   if self.item then

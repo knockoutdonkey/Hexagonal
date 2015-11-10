@@ -2,22 +2,21 @@ local Unit = {}
 
 Unit.selected = nil
 
-function Unit:new(x, y, color)
+function Unit:new(coord, color)
 
   local obj = {}
   setmetatable(obj, self)
   self.__index = self
 
   -- Don't create a Unit if there is already something at that location
-  if World.instance:get(x, y).item then
+  if World.instance:get(coord).item then
     print('Unit could not be placed')
     return false
   end
 
-  World.instance:get(x, y).item = obj
+  World.instance:get(coord).item = obj
 
-  obj.x = x
-  obj.y = y
+  obj.coord = coord:copy()
   obj.color = color
   obj.moveRange = 3
   obj.jumpRange = 1
@@ -33,17 +32,16 @@ function Unit:new(x, y, color)
 end
 
 --TODO: check for hit collision before moving
-function Unit:move(dX, dY)
-  self:moveTo(self.x + dX, self.y + dY)
+function Unit:move(deltaCoord)
+  self:moveTo(self.coord:add(deltaCoord))
 end
 
-function Unit:moveTo(x, y)
-  local newTile = World.instance:get(x, y)
-  local oldTile = World.instance:get(self.x, self.y)
+function Unit:moveTo(nextCoord)
+  local newTile = World.instance:get(nextCoord)
+  local oldTile = World.instance:get(self.coord)
   if not newTile.blocking and not newTile.item and self.ready and newTile.highlighted then
 
-    self.x = x
-    self.y = y
+    self.coord = nextCoord:copy()
 
     oldTile.item = nil
     newTile.item = self
@@ -59,8 +57,8 @@ function Unit:select()
   else
     Unit.selected = self
 
-    function highlight(x, y, distanceLeft)
-      local tile = World.instance:get(x,y)
+    function highlight(coord, distanceLeft)
+      local tile = World.instance:get(coord)
       if distanceLeft < 0 or tile.blocking then
         return
       end
@@ -71,25 +69,15 @@ function Unit:select()
 
       tile.highlighted = true
 
-      -- highlight all neighbors
-      local nextCoords = {
-        {dX= 0, dY= 1},
-        {dX= 1, dY= 0},
-        {dX= 1, dY=-1},
-        {dX= 0, dY=-1},
-        {dX=-1, dY= 0},
-        {dX=-1, dY= 1}
-      }
-
-      for i, coord in ipairs(nextCoords) do
-        local nextTile = World.instance:get(x + coord.dX, y + coord.dY)
+      for i, neighborCoord in ipairs(coord:getNeighbors()) do
+        local nextTile = World.instance:get(neighborCoord)
         if math.abs(tile.height - nextTile.height) <= self.jumpRange then
-          highlight(x + coord.dX, y + coord.dY, distanceLeft - 1)
+          highlight(neighborCoord, distanceLeft - 1)
         end
       end
     end
 
-    highlight(self.x, self.y, self.moveRange)
+    highlight(self.coord, self.moveRange)
   end
 end
 
@@ -102,7 +90,7 @@ function Unit:damage(damage)
 end
 
 function Unit:kill()
-  print('Oh no', self.x, self.y, 'is dead')
+  print('Oh no', self.coord.x, self.coord.y, 'is dead')
 end
 
 function Unit:draw()
@@ -123,7 +111,7 @@ function Unit:draw()
   end
 
   -- Draw the player
-  pixelX, pixelY = World.instance:transformToPixels(self.x, self.y)
+  pixelX, pixelY = World.instance:transformToPixels(self.coord)
   local playerRadius = 15
   love.graphics.circle("fill", pixelX, pixelY - math.sqrt(1 - Tile.tilt * Tile.tilt) * playerRadius, playerRadius)
 

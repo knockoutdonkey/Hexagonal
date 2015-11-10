@@ -16,7 +16,7 @@ function Controller:mouseDown(pX, pY)
 end
 
 function Controller:mouseMove(pX, pY)
-  local x, y = self:getScreenCoords(pX, pY)
+  local coord = self:getScreenCoord(pX, pY)
 end
 
 function Controller:mouseUp(pX, pY)
@@ -24,16 +24,16 @@ function Controller:mouseUp(pX, pY)
 end
 
 function Controller:rClick(pX, pY)
-  local x, y = self:getScreenCoords(pX, pY)
-  World.instance:get(x, y):raise()
+  local coord = self:getScreenCoord(pX, pY)
+  World.instance:get(coord):raise()
 end
 
 function Controller:fClick(pX, pY)
-  local x, y = self:getScreenCoords(pX, pY)
-  World.instance:get(x, y):lower()
+  local coord = self:getScreenCoord(pX, pY)
+  World.instance:get(coord):lower()
 end
 
-function Controller:getScreenCoords(pX, pY)
+function Controller:getScreenCoord(pX, pY)
   local width = love.graphics:getWidth()
   local height = love.graphics:getHeight()
   return World.instance:transformToCoords(pX - width / 2, pY - height / 2)

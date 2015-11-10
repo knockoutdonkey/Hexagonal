@@ -21,7 +21,7 @@ function ClickManager:click(pX, pY)
   local width = love.graphics:getWidth()
   local height = love.graphics:getHeight()
 
-  -- check for buttons (just attack buttons for now)
+  -- first, check if a button is clicked (just attack buttons for now)
   local attackBorder = 70
   local attackSize = 60
   local buttonClicked = false
@@ -35,16 +35,16 @@ function ClickManager:click(pX, pY)
     end
   end
 
-  -- check for tile selection
+  -- second, check if a tile is clicked
   if not buttonClicked then
-    local x, y = Controller:getScreenCoords(pX, pY)
-    local tile = World.instance:get(x, y)
+    local coord = Controller:getScreenCoord(pX, pY)
+    local tile = World.instance:get(coord)
     if Tile.selected ~= tile then
       tile:select()
     end
   end
 
-  -- TODO: check for selection of top of tile, not bottem
+  -- TODO: check for click on top of tile, instead of bottem
   for i = World.size, -World.size, -1 do
 
   end
@@ -54,11 +54,11 @@ end
 function ClickManager:endClick(pX, pY)
 
   -- Only pay attention to endClick when moving
-  local x, y = Controller:getScreenCoords(pX, pY)
+  local coord = Controller:getScreenCoord(pX, pY)
   if World.instance.selectedAttack then
-    World.instance:attack(x, y)
+    World.instance:attack(coord)
   else
-    World.instance:moveSelectedTo(x, y)
+    World.instance:moveSelectedTo(coord)
   end
 end
 
