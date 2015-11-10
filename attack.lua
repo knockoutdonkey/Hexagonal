@@ -17,7 +17,7 @@ end
 -- returns whether or not the attack did anything
 function Attack:perform(tile)
   local targetUnit = tile.item
-  if targetUnit then
+  if targetUnit and self.unit.ready then
     targetUnit:damage(self.damage)
     self.unit:endTurn()
     return true

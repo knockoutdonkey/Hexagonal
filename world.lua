@@ -83,10 +83,14 @@ function World:attack(coord)
   local tile = self:get(coord)
   if self.selectedAttack then
     -- returns true if the attack did something
-    attackResult = self.selectedAttack:perform(tile)
+    if tile.attackHighlighted then
+      attackResult = self.selectedAttack:perform(tile)
 
-    -- only reset selected attack, if an attack happened
-    if attackResult then
+      -- only reset selected attack, if an attack happened
+      if attackResult then
+        self.selectedAttack = nil
+      end
+    else
       self.selectedAttack = nil
     end
   else

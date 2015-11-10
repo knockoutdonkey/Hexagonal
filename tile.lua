@@ -35,6 +35,11 @@ end
 
 -- select tile and any unit that may be on it
 function Tile:select()
+  -- if character is highlighted for an attack, then don't select the character
+  if self.attackHighlighted then
+    return
+  end
+
   if Tile.selected == self then
     Tile.selected = nil
   else

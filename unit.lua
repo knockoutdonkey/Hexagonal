@@ -50,7 +50,7 @@ end
 function Unit:moveTo(nextCoord)
   local newTile = World.instance:get(nextCoord)
   local oldTile = World.instance:get(self.coord)
-  if not newTile.blocking and not newTile.item and self.movesLeft and newTile.highlighted then
+  if not newTile.blocking and not newTile.item and newTile.highlighted and self.movesLeft and self.ready then
 
     self.movesLeft = self.movesLeft - self.coord:getDistance(nextCoord)
     self.coord = nextCoord:copy()
