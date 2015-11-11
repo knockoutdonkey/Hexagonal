@@ -55,7 +55,7 @@ end
 function Unit:moveTo(nextCoord)
   local newTile = World.instance:get(nextCoord)
   local oldTile = World.instance:get(self.coord)
-  if not newTile.blocking and not newTile.item and newTile.highlighted and self.movesLeft and self.ready then
+  if not newTile:getBlocking() and not newTile.item and newTile.highlighted and self.movesLeft and self.ready then
 
     self.movesLeft = self.movesLeft - self.coord:getDistance(nextCoord)
     self.coord = nextCoord:copy()
@@ -74,7 +74,7 @@ function Unit:select()
 
     function highlight(coord, distanceLeft)
       local tile = World.instance:get(coord)
-      if distanceLeft < 0 or tile.blocking then
+      if distanceLeft < 0 or tile:getBlocking() then
         return
       end
 

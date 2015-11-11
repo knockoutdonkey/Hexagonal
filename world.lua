@@ -2,6 +2,7 @@ local World = {}
 
 World.instance = nil
 World.size = 5
+World.waterNum = 25
 World.playerUnitNum = 3
 World.enemyUnitNum = 3
 
@@ -32,9 +33,20 @@ function World:new()
   obj.deadTile = Tile:new(1000, 0)
   obj.deadTile:setHeight(1000)
 
+  -- World setup
+  obj:placeWater()
   obj:placeUnits()
 
   return obj
+end
+
+function World:placeWater()
+  for i = 1, World.waterNum do
+    local randomCoord = HexCoord:new(math.random(-World.size, World.size),
+                                     math.random(-World.size, World.size))
+    local tile = self:get(randomCoord)
+    tile:addWater()
+  end
 end
 
 function World:placeUnits()
@@ -42,8 +54,8 @@ function World:placeUnits()
   for i = 1, World.playerUnitNum do
     repeat
       randomCoord = HexCoord:new(math.random(-World.size, World.size),
-                               math.random(-World.size, World.size))
-    until not self:get(randomCoord).item and not self:get(randomCoord).blocking
+                                 math.random(-World.size, World.size))
+    until not self:get(randomCoord).item and not self:get(randomCoord):getBlocking()
 
     local newUnit = Commando:new(randomCoord, 'yellow')
     self:get(randomCoord).item = newUnit
@@ -55,7 +67,7 @@ function World:placeUnits()
     repeat
       randomCoord = HexCoord:new(math.random(-World.size, World.size),
                                math.random(-World.size, World.size))
-    until not self:get(randomCoord).item and not self:get(randomCoord).blocking
+    until not self:get(randomCoord).item and not self:get(randomCoord):getBlocking()
 
     local newUnit = Commando:new(randomCoord, 'red')
     newUnit.ready = false
