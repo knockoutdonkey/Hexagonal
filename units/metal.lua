@@ -29,11 +29,17 @@ function Metal:startTurn()
 
   -- blow up if self destructing
   if self.selfDestructing then
-    for i, neighborCoord in ipairs(self.coord:getAllWithin(2, 0)) do
-      local unit = World.instance:get(neighborCoord).item
+
+    local size = 2
+    local height = World.instance:get(self.coord).getHeight()
+    for i, neighborCoord in ipairs(self.coord:getAllWithin(size, 0)) do
+      local tile = World.instance:get(neighborCoord)
+      local unit = tile.item
       if unit then
         unit:damage(self.attacks[3].damage)
       end
+
+      tile:setHeight(height - size + self.coord:getDistance(neighborCoord))
     end
   end
 
