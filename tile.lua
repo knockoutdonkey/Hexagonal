@@ -20,16 +20,15 @@ function Tile:new(coordOrX, y)
     obj.coord = coordOrX:copy()
   end
 
-
-  obj.height = nil
-  obj:setHeight(math.random(0, 2)) -- use setter and getter to manipulate
-
   obj.waterLevel = 0
 
   obj.item = nil
   obj.highlighted = false
 
   obj.attackHighlighted = false
+
+  obj.height = 0
+  obj:setHeight(math.random(0, 2)) -- use setter and getter to manipulate
 
   return obj
 end
@@ -58,14 +57,25 @@ end
 
 function Tile:raise()
   self:setHeight(self:getHeight() + 1)
-  self:iterateWaterFlow()
 end
 
 function Tile:lower()
   self:setHeight(self:getHeight() - 1)
+end
+
+function Tile:setHeight(height)
+  if height < 0 then
+    height = 0
+  end
+
+  local oldHeight = self:getHeight()
+  self.height = height
+
   self:iterateWaterFlow()
-  for i, coord in ipairs(self.coord:getNeighbors()) do
-    World.instance:get(coord):iterateWaterFlow()
+  if self.height < oldHeight then
+    for i, coord in ipairs(self.coord:getNeighbors()) do
+      World.instance:get(coord):iterateWaterFlow()
+    end
   end
 end
 
@@ -77,12 +87,6 @@ function Tile:getBlocking()
   return self.waterLevel > .1 or self.height > 100
 end
 
-function Tile:setHeight(height)
-  if height >= 0 then
-    self.height = height
-  end
-end
-
 function Tile:addWater()
   self.waterLevel = self.waterLevel + 1
   self:iterateWaterFlow()
@@ -90,7 +94,12 @@ end
 
 local waterQuantum = .1
 
+-- TODO: Make this iterative instead of recursive
 function Tile:iterateWaterFlow()
+  if self.waterLevel <= 0 then
+    return
+  end
+
   local neighborCoords = self.coord:getNeighbors()
 
   local nextTiles = {}

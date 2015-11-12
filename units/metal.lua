@@ -31,7 +31,7 @@ function Metal:startTurn()
   if self.selfDestructing then
 
     local size = 2
-    local height = World.instance:get(self.coord).getHeight()
+    local height = World.instance:get(self.coord):getHeight()
     for i, neighborCoord in ipairs(self.coord:getAllWithin(size, 0)) do
       local tile = World.instance:get(neighborCoord)
       local unit = tile.item
