@@ -13,11 +13,12 @@ function Outpost:new(unit)
 end
 
 function Outpost:getRange()
-  return {self.unit.coord}
+  return self.unit.coord:getAllWithin(1, 0)
 end
 
 function Outpost:perform(tile)
   if self.unit.ready then
+    tile:raise()
     tile:raise()
     self.unit:endTurn()
     return true

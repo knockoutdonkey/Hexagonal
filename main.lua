@@ -3,6 +3,7 @@ Tile = require('tile')
 
 Unit = require('units/unit')
 Commando = require('units/commando')
+Metal = require('units/metal')
 
 Attack = require('attacks/attack')
 Fire = require('attacks/commando/fire')

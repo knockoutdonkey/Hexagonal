@@ -88,7 +88,7 @@ function Tile:addWater()
   self:iterateWaterFlow()
 end
 
-local waterQuantum = .05
+local waterQuantum = .1
 
 function Tile:iterateWaterFlow()
   local neighborCoords = self.coord:getNeighbors()

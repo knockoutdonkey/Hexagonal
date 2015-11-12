@@ -57,7 +57,12 @@ function World:placeUnits()
                                  math.random(-World.size, World.size))
     until not self:get(randomCoord).item and not self:get(randomCoord):getBlocking()
 
-    local newUnit = Commando:new(randomCoord, 'yellow')
+    local newUnit
+    if i ~= World.playerUnitNum then
+      newUnit = Commando:new(randomCoord, 'yellow')
+    else
+      newUnit = Metal:new(randomCoord, 'yellow')
+    end
     self:get(randomCoord).item = newUnit
     table.insert(self.playerUnits, newUnit)
   end
@@ -69,7 +74,12 @@ function World:placeUnits()
                                math.random(-World.size, World.size))
     until not self:get(randomCoord).item and not self:get(randomCoord):getBlocking()
 
-    local newUnit = Commando:new(randomCoord, 'red')
+    local newUnit
+    if i ~= World.playerUnitNum then
+      newUnit = Commando:new(randomCoord, 'red')
+    else
+      newUnit = Metal:new(randomCoord, 'red')
+    end
     newUnit.ready = false
     self:get(randomCoord).item = newUnit
     table.insert(self.enemyUnits, newUnit)

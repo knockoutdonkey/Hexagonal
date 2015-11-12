@@ -21,6 +21,8 @@ function Unit:new(coord, color)
   obj.color = color
 
   -- These are unique to this unit
+  obj.image = love.graphics.newImage('assets/rabbit.png')
+
   obj.moveRange = 3
   obj.jumpRange = 1
   obj.maxHealth = 10
@@ -35,6 +37,8 @@ function Unit:setUp()
   self.health = self.maxHealth
   self.movesLeft = self.moveRange
   self.ready = true
+
+  self.image:setFilter('nearest', 'nearest')
 end
 
 function Unit:startTurn()
@@ -109,32 +113,35 @@ function Unit:kill()
 end
 
 function Unit:draw()
-
-  -- Set the unit color
+  -- set team tinting
   if self.color == 'yellow' then
     if self.ready then
-      love.graphics.setColor(220, 255, 40, 255)
+      love.graphics.setColor(240, 255, 150, 255)
     else
-      love.graphics.setColor(160, 180, 100, 255)
+      love.graphics.setColor(140, 150, 90, 255)
     end
   else
     if self.ready then
-      love.graphics.setColor(255, 50, 50, 255)
+      love.graphics.setColor(255, 205, 205, 255)
     else
-      love.graphics.setColor(170, 100, 100, 255)
+      love.graphics.setColor(150, 130, 130, 255)
     end
   end
 
-  -- Draw the player
   pixelX, pixelY = World.instance:transformToPixels(self.coord)
-  local playerRadius = 15
-  love.graphics.circle("fill", pixelX, pixelY - math.sqrt(1 - Tile.tilt * Tile.tilt) * playerRadius, playerRadius)
+  love.graphics.draw(self.image, pixelX - self.image:getWidth() / 2, pixelY - self.image:getWidth() / 2 - Tile.side / 2 - 4)
 
-  -- Draw the health bar
+  self:drawHealthBar()
+end
+
+function Unit:drawHealthBar()
+  pixelX, pixelY = World.instance:transformToPixels(self.coord)
+
   local healthLength = 30
   local healthHeight = 5
+  local healthDistanceAway = 45
   love.graphics.setColor(255, 0, 255, 255)
-  love.graphics.rectangle("fill", pixelX - healthLength / 2, pixelY - healthHeight / 2 - playerRadius * (1.4 + math.sqrt(1 - Tile.tilt * Tile.tilt)), healthLength * self.health / self.maxHealth , healthHeight)
+  love.graphics.rectangle("fill", pixelX - healthLength / 2, pixelY - healthHeight / 2 - healthDistanceAway, healthLength * self.health / self.maxHealth , healthHeight)
 end
 
 function Unit:drawAttacks()

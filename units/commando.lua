@@ -8,6 +8,8 @@ function Commando:new(coord, color)
   setmetatable(obj, self)
   self.__index = self
 
+  obj.image = love.graphics.newImage('assets/knifeGuy.png')
+
   obj.moveRange = 4
   obj.jumpRange = 1
   obj.maxHealth = 7
