@@ -106,7 +106,7 @@ function World:attack(coord)
   if self.selectedAttack then
     -- returns true if the attack did something
     if tile.attackHighlighted then
-      attackResult = self.selectedAttack:perform(tile)
+      attackResult = self.selectedAttack:attack(tile)
 
       -- only reset selected attack, if an attack happened
       if attackResult then

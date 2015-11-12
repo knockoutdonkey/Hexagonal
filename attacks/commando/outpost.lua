@@ -17,14 +17,9 @@ function Outpost:getRange()
 end
 
 function Outpost:perform(tile)
-  if self.unit.ready then
-    tile:raise()
-    tile:raise()
-    self.unit:endTurn()
-    return true
-  else
-    return false
-  end
+  tile:raise()
+  tile:raise()
+  return true
 end
 
 return Outpost

@@ -10,6 +10,7 @@ function Commando:new(coord, color)
 
   obj.image = love.graphics.newImage('assets/knifeGuy.png')
 
+  obj.name = 'Commando'
   obj.moveRange = 4
   obj.jumpRange = 1
   obj.maxHealth = 7

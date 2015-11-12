@@ -1,14 +1,22 @@
+-- Terrain
 World = require('world')
 Tile = require('tile')
 
+-- Units
 Unit = require('units/unit')
 Commando = require('units/commando')
 Metal = require('units/metal')
 
+-- Attacks
 Attack = require('attacks/attack')
+
 Fire = require('attacks/commando/fire')
 Outpost = require('attacks/commando/outpost')
 
+SpinAttack = require('attacks/metal/spinAttack')
+Climb = require('attacks/metal/climb')
+
+-- Utilities
 Controller = require('controller')
 ClickManager = require('clickManager')
 HexCoord = require('hexCoord')

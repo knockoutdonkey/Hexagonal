@@ -16,22 +16,36 @@ function Attack:new(unit)
 end
 
 -- OVERWRITE to provide a different attack range
+-- Public
 -- Returns an array valid hexCoord locations
 function Attack:getRange()
   return self.unit.coord:getNeighbors()
 end
 
 -- OVERWRITE to provide a different attack behavior
+-- Private
 -- Returns whether or not the attack did anything
 function Attack:perform(tile)
   local targetUnit = tile.item
-  if targetUnit and self.unit.ready then
+  if targetUnit then
     targetUnit:damage(self.damage)
-    self.unit:endTurn()
     return true
   else
     return false
   end
+end
+
+-- Public, should be called for attacks
+function Attack:attack(tile)
+  if not self.unit.ready then
+    return false
+  end
+
+  local result = self:perform(tile)
+  if result then
+    self.unit:endTurn()
+  end
+  return result
 end
 
 function Attack:draw(pX, pY)

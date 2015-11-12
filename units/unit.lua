@@ -23,6 +23,7 @@ function Unit:new(coord, color)
   -- These are unique to this unit
   obj.image = love.graphics.newImage('assets/rabbit.png')
 
+  obj.name = 'Unit'
   obj.moveRange = 3
   obj.jumpRange = 1
   obj.maxHealth = 10
@@ -66,7 +67,10 @@ function Unit:moveTo(nextCoord)
 
     oldTile.item = nil
     newTile.item = self
+
+    return true
   end
+  return false
 end
 
 function Unit:select()
