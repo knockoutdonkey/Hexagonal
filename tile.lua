@@ -22,7 +22,7 @@ function Tile:new(coordOrX, y)
 
 
   obj.height = nil
-  obj:setHeight(math.random(0, 3)) -- use setter and getter to manipulate
+  obj:setHeight(math.random(0, 2)) -- use setter and getter to manipulate
 
   obj.waterLevel = 0
 

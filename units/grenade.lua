@@ -14,7 +14,7 @@ function Grenade:new(coord, color)
   obj.moveRange = 1
   obj.jumpRange = 0
   obj.maxHealth = 100000
-  obj.attacks = {Fire:new(obj), Knife:new(obj), Outpost:new(obj)}
+  obj.attacks = {}
 
   obj:setUp()
 

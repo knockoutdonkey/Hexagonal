@@ -12,13 +12,14 @@ Grenade = require('units/grenade')
 -- Attacks
 Attack = require('attacks/attack')
 
-Fire = require('attacks/commando/fire')
+LongShot = require('attacks/commando/longShot')
 Knife = require('attacks/commando/knife')
 GrenadeToss = require('attacks/commando/grenadeToss')
 Outpost = require('attacks/commando/outpost')
 
 SpinAttack = require('attacks/metal/spinAttack')
 Climb = require('attacks/metal/climb')
+SelfDestruct = require('attacks/metal/selfDestruct')
 
 -- Utilities
 Controller = require('controller')

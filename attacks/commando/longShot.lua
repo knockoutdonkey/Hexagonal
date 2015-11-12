@@ -1,9 +1,9 @@
-local Fire = {}
-setmetatable(Fire, Attack)
+local LongShot = {}
+setmetatable(LongShot, Attack)
 
-function Fire:new(unit)
+function LongShot:new(unit)
 
-  local obj = Attack:new(unit, love.graphics.newImage('assets/attackIcons/FireIcon.png'))
+  local obj = Attack:new(unit, love.graphics.newImage('assets/attackIcons/LongShotIcon.png'))
   setmetatable(obj, self)
   self.__index = self
 
@@ -13,11 +13,11 @@ function Fire:new(unit)
 end
 
 -- shoots within a range of 3, but only in a clear line of sight
-function Fire:getRange()
+function LongShot:getRange()
   -- create a hash of all possible in range tiles
   return self.unit.coord:getAllWithin(5, 1)
 
   -- iterate through hash and remove all tiles that are blocked (blocked if tiles in front are two higher)
 end
 
-return Fire
+return LongShot

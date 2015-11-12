@@ -113,7 +113,6 @@ function Unit:damage(damage)
 end
 
 function Unit:kill()
-  print('Oh no', self.coord.x, self.coord.y, 'is dead')
   World.instance:removeUnit(self)
   World.instance:get(self.coord).item = nil
 end
