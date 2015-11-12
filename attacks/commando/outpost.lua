@@ -3,7 +3,7 @@ setmetatable(Outpost, Attack)
 
 function Outpost:new(unit)
 
-  local obj = Attack:new(unit)
+  local obj = Attack:new(unit, love.graphics.newImage('assets/attackIcons/OutpostIcon.png'))
   setmetatable(obj, self)
   self.__index = self
 

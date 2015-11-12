@@ -11,6 +11,7 @@ Metal = require('units/metal')
 Attack = require('attacks/attack')
 
 Fire = require('attacks/commando/fire')
+Knife = require('attacks/commando/knife')
 Outpost = require('attacks/commando/outpost')
 
 SpinAttack = require('attacks/metal/spinAttack')

@@ -3,7 +3,7 @@ setmetatable(SpinAttack, Attack)
 
 function SpinAttack:new(unit)
 
-  local obj = Attack:new(unit)
+  local obj = Attack:new(unit, love.graphics.newImage('assets/attackIcons/SpinAttackIcon.png'))
   setmetatable(obj, self)
   self.__index = self
 

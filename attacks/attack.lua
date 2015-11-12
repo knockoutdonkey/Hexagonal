@@ -1,6 +1,6 @@
 local Attack = {}
 
-function Attack:new(unit)
+function Attack:new(unit, image)
 
   -- Class setup
   local obj = {}
@@ -10,6 +10,9 @@ function Attack:new(unit)
   obj.unit = unit
 
   -- This is unique to this attack
+  obj.image = image or love.graphics.newImage('assets/attackIcons/KnifeIcon.png')
+  obj.image:setFilter('nearest', 'nearest')
+
   obj.damage = 3
 
   return obj
@@ -49,8 +52,8 @@ function Attack:attack(tile)
 end
 
 function Attack:draw(pX, pY)
-  love.graphics.setColor(255, 0, 0, 255)
-  love.graphics.rectangle("fill", pX - 30, pY - 30, 60, 60)
+  love.graphics.setColor(255, 255, 255, 255)
+  love.graphics.draw(self.image, pX - 30, pY - 30, 0, 2, 2)
 end
 
 return Attack

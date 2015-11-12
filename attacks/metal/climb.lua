@@ -3,7 +3,7 @@ setmetatable(Climb, Attack)
 
 function Climb:new(unit)
 
-  local obj = Attack:new(unit)
+  local obj = Attack:new(unit, love.graphics.newImage('assets/attackIcons/ClimbIcon.png'))
   setmetatable(obj, self)
   self.__index = self
 

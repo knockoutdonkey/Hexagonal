@@ -3,7 +3,7 @@ setmetatable(Fire, Attack)
 
 function Fire:new(unit)
 
-  local obj = Attack:new(unit)
+  local obj = Attack:new(unit, love.graphics.newImage('assets/attackIcons/FireIcon.png'))
   setmetatable(obj, self)
   self.__index = self
 

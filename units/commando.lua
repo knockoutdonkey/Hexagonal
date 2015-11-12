@@ -8,13 +8,13 @@ function Commando:new(coord, color)
   setmetatable(obj, self)
   self.__index = self
 
-  obj.image = love.graphics.newImage('assets/knifeGuy.png')
+  obj.image = love.graphics.newImage('assets/units/knifeGuy.png')
 
   obj.name = 'Commando'
   obj.moveRange = 4
   obj.jumpRange = 1
   obj.maxHealth = 7
-  obj.attacks = {Fire:new(obj), Attack:new(obj), Outpost:new(obj)}
+  obj.attacks = {Fire:new(obj), Knife:new(obj), Outpost:new(obj)}
 
   obj:setUp()
 

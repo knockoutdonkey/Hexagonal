@@ -8,7 +8,7 @@ function Metal:new(coord, color)
   setmetatable(obj, self)
   self.__index = self
 
-  obj.image = love.graphics.newImage('assets/metal.png')
+  obj.image = love.graphics.newImage('assets/units/metal.png')
 
   obj.name = 'Metal'
   obj.moveRange = 8

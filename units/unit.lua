@@ -21,7 +21,7 @@ function Unit:new(coord, color)
   obj.color = color
 
   -- These are unique to this unit
-  obj.image = love.graphics.newImage('assets/rabbit.png')
+  obj.image = love.graphics.newImage('assets/units/rabbit.png')
 
   obj.name = 'Unit'
   obj.moveRange = 3

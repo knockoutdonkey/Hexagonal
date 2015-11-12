@@ -111,6 +111,9 @@ function World:attack(coord)
       -- only reset selected attack, if an attack happened
       if attackResult then
         self.selectedAttack = nil
+        Tile.selected = nil
+        Unit.selected = nil
+        self:unhighlight()
       end
     else
       self.selectedAttack = nil
