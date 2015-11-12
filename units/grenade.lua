@@ -1,0 +1,33 @@
+local Grenade = {}
+setmetatable(Grenade, Unit)
+
+function Grenade:new(coord, color)
+
+  -- Class setup
+  local obj = Unit:new(coord, color)
+  setmetatable(obj, self)
+  self.__index = self
+
+  obj.image = love.graphics.newImage('assets/units/grenade.png')
+
+  obj.name = 'Grenade'
+  obj.moveRange = 1
+  obj.jumpRange = 0
+  obj.maxHealth = 100000
+  obj.attacks = {Fire:new(obj), Knife:new(obj), Outpost:new(obj)}
+
+  obj:setUp()
+
+  return obj
+end
+
+function Unit:startTurn()
+  self.ready = true
+  self:explode()
+end
+
+function Unit:explode()
+  --self:kill()
+end
+
+return Grenade

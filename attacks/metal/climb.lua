@@ -27,9 +27,10 @@ end
 
 function Climb:perform(tile)
   if not tile.item and not tile:getBlocking() then
-    self.unit.coord = tile.coord:copy()
 
     World.instance:get(self.unit.coord).item = nil
+
+    self.unit.coord = tile.coord:copy()
     tile.item = self.unit
 
     return true

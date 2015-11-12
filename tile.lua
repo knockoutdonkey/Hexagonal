@@ -176,7 +176,7 @@ function Tile:draw()
 
   -- draw water
   if self.waterLevel > 0 then
-    love.graphics.setColor(100 - 80 * self.waterLevel, 130 - 80 * self.waterLevel, 140 + 80 * self.waterLevel, math.min(self.waterLevel * 2 * 255, 255))
+    love.graphics.setColor(50, 70, 255, math.min(self.waterLevel * 3 * 255, 255))
     love.graphics.polygon('fill', Tile.side * (1 + self.coord.x * 1.5 + self.coord.y * 1.5), .866 * -Tile.side * Tile.tilt * (0 - self.coord.x + self.coord.y) - self.height * tileRaise,
                                 Tile.side * (1 + self.coord.x * 1.5 + self.coord.y * 1.5), .866 * -Tile.side * Tile.tilt * (0 - self.coord.x + self.coord.y) - (self.height + self.waterLevel) * tileRaise,
                                 Tile.side * (.5 + self.coord.x * 1.5 + self.coord.y * 1.5), .866 * -Tile.side * Tile.tilt * (1 - self.coord.x + self.coord.y) - (self.height + self.waterLevel) * tileRaise,

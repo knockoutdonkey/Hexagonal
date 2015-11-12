@@ -127,6 +127,24 @@ function World:attack(coord)
   return attackResult
 end
 
+function World:removeUnit(unit)
+  for i = 1, #self.playerUnits do
+    local playerUnit = self.playerUnits[i]
+    if playerUnit == unit then
+      table.remove(self.playerUnits, i)
+      return
+    end
+  end
+
+  for i = 1, #self.enemyUnits do
+    local enemyUnit = self.enemyUnits[i]
+    if enemyUnit == unit then
+      table.remove(self.enemyUnits, i)
+      return
+    end
+  end
+end
+
 function World:moveSelectedTo(coord)
 
   if Tile.selected and Tile.selected.item then

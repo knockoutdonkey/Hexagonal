@@ -52,7 +52,7 @@ function Unit:endTurn()
   self.ready = false
 end
 
---TODO: check for hit collision before moving
+-- TODO: check for hit collision before moving
 function Unit:move(deltaCoord)
   self:moveTo(self.coord:add(deltaCoord))
 end
@@ -114,6 +114,8 @@ end
 
 function Unit:kill()
   print('Oh no', self.coord.x, self.coord.y, 'is dead')
+  World.instance:removeUnit(self)
+  World.instance:get(self.coord).item = nil
 end
 
 function Unit:draw()
