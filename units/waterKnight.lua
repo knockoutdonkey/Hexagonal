@@ -14,7 +14,9 @@ function WaterKnight:new(coord, color)
   obj.moveRange = 3
   obj.jumpRange = 1
   obj.maxHealth = 8
-  obj.attacks = {LongShot:new(obj), Knife:new(obj), SelfDestruct:new(obj), NoAttack:new(obj)}
+  obj.attacks = {Storm:new(obj), NoAttack:new(obj)}
+
+  obj.waterWalker = true
 
   obj:setUp()
 

@@ -29,6 +29,9 @@ function Unit:new(coord, color)
   obj.maxHealth = 10
   obj.attacks = {Attack:new(obj), Attack:new(obj), NoAttack:new(obj)}
 
+  -- Movement options
+  obj.waterWalker = false
+
   obj:setUp()
 
   return obj
@@ -37,7 +40,7 @@ end
 function Unit:setUp()
   self.health = self.maxHealth
   self.movesLeft = self.moveRange
-  self.ready = true
+  self.ready = false
 
   self.image:setFilter('nearest', 'nearest')
 end
@@ -114,7 +117,7 @@ function Unit:select()
       tile.highlighted = true
 
       -- Only allow one move if in water
-      if tile:hasWater() and distanceLeft > 0 then
+      if (tile:hasWater() and not self.waterWalker) and distanceLeft > 0 then
         distanceLeft = 1
       end
 

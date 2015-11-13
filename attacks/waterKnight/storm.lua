@@ -1,41 +1,36 @@
-Strom = {}
-setmetatable(Strom, Attack)
+Storm = {}
+setmetatable(Storm, Attack)
 
-function Strom:new(unit)
+function Storm:new(unit)
 
   local obj = Attack:new(unit, love.graphics.newImage('assets/attackIcons/StormIcon.png'))
   setmetatable(obj, self)
   self.__index = self
 
-  obj.damage = 3
+  obj.damage = 1
 
   return obj
 end
 
 -- able to hit all
-function Strom:getRange()
+function Storm:getRange()
   local neighbors = self.unit.coord:getNeighbors()
-
-  local range = {}
-  for i, coord in ipairs(neighbors) do
-    if math.abs(World.instance:get(coord):getHeight() - World.instance:get(self.unit.coord):getHeight()) <= 1 then
-      table.insert(range, coord)
-    end
-  end
-  return range
+  table.insert(neighbors, self.unit.coord)
+  return neighbors
 end
 
-function Strom:perform(tile)
-  local coords = self:getRange()
-  local hit = false
-  for i, coord in ipairs(coords) do
-    local target = World.instance:get(coord).item
-    if target then
-      target:damage(self.damage)
-      hit = true
+function Storm:perform(tile)
+  local neighbors = self:getRange()
+
+  for i, neighbor in ipairs(neighbors) do
+    local tile = World.instance:get(neighbor)
+    if tile.item and not tile.coord:equals(self.unit.coord) then
+      tile.item:damage(self.damage)
     end
+    tile:addWater()
   end
-  return hit
+
+  return true
 end
 
-return Strom
+return Storm
