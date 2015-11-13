@@ -58,10 +58,10 @@ function World:placeUnits()
     until not self:get(randomCoord).item and not self:get(randomCoord):getBlocking()
 
     local newUnit
-    if i ~= World.playerUnitNum then
-      newUnit = Commando:new(randomCoord, 'yellow')
-    else
+    if i == World.playerUnitNum then
       newUnit = Metal:new(randomCoord, 'yellow')
+    else
+      newUnit = Commando:new(randomCoord, 'yellow')
     end
     self:get(randomCoord).item = newUnit
     table.insert(self.playerUnits, newUnit)
@@ -94,6 +94,11 @@ function World:showAttackRange(attackNum)
     self.selectedAttack = attack
     for i, coord in ipairs(attack:getRange()) do
       self:get(coord).attackHighlighted = true
+    end
+
+    -- only returns nothing for noAttack (in which case end turn)
+    if #attack:getRange() == 1 then
+      self:attack(unit.coord)
     end
   else
     print('Error: no selected unit to show attack range')

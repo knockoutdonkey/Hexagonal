@@ -21,12 +21,12 @@ function Grenade:new(coord, color)
   return obj
 end
 
-function Unit:startTurn()
+function Grenade:startTurn()
   self.ready = true
   self:explode()
 end
 
-function Unit:explode()
+function Grenade:explode()
   --self:kill()
 end
 

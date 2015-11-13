@@ -13,8 +13,8 @@ function Commando:new(coord, color)
   obj.name = 'Commando'
   obj.moveRange = 4
   obj.jumpRange = 1
-  obj.maxHealth = 7
-  obj.attacks = {LongShot:new(obj), Knife:new(obj), Outpost:new(obj)}
+  obj.maxHealth = 6
+  obj.attacks = {LongShot:new(obj), Knife:new(obj), Outpost:new(obj), NoAttack:new(obj)}
 
   obj:setUp()
 

@@ -6,11 +6,13 @@ Tile = require('tile')
 Unit = require('units/unit')
 Commando = require('units/commando')
 Metal = require('units/metal')
+WaterKnight = require('units/waterKnight')
 
 Grenade = require('units/grenade')
 
 -- Attacks
 Attack = require('attacks/attack')
+NoAttack = require('attacks/noAttack')
 
 LongShot = require('attacks/commando/longShot')
 Knife = require('attacks/commando/knife')
@@ -18,6 +20,7 @@ GrenadeToss = require('attacks/commando/grenadeToss')
 Outpost = require('attacks/commando/outpost')
 
 SpinAttack = require('attacks/metal/spinAttack')
+Bash = require('attacks/metal/bash')
 Climb = require('attacks/metal/climb')
 SelfDestruct = require('attacks/metal/selfDestruct')
 

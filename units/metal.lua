@@ -14,7 +14,7 @@ function Metal:new(coord, color)
   obj.moveRange = 8
   obj.jumpRange = 0
   obj.maxHealth = 10
-  obj.attacks = {SpinAttack:new(obj), Climb:new(obj), SelfDestruct:new(obj)}
+  obj.attacks = {SpinAttack:new(obj), Climb:new(obj), Bash:new(obj), SelfDestruct:new(obj), NoAttack:new(obj)}
 
   -- for self destruct
   obj.selfDestructing = false
@@ -36,10 +36,13 @@ function Metal:startTurn()
       local tile = World.instance:get(neighborCoord)
       local unit = tile.item
       if unit then
-        unit:damage(self.attacks[3].damage)
+        unit:damage(self.attacks[4].damage)
       end
 
-      tile:setHeight(height - size + self.coord:getDistance(neighborCoord))
+      local newHeight = height - size + self.coord:getDistance(neighborCoord)
+      if newHeight < height then
+        tile:setHeight(newHeight)
+      end
     end
   end
 

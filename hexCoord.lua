@@ -68,4 +68,25 @@ function HexCoord:getDistance(otherCoord)
   end
 end
 
+function HexCoord:getDirectionTo(toOtherCoord)
+  local dx, dy
+  if toOtherCoord.x - self.x > 0 then
+    dx = 1
+  elseif toOtherCoord.x - self.x == 0 then
+    dx = 0
+  else
+    dx = -1
+  end
+
+  if toOtherCoord.y - self.y > 0 then
+    dy = 1
+  elseif toOtherCoord.y - self.y == 0 then
+    dy = 0
+  else
+    dy = -1
+  end
+
+  return HexCoord:new(dx, dy)
+end
+
 return HexCoord

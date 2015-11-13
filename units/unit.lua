@@ -27,7 +27,7 @@ function Unit:new(coord, color)
   obj.moveRange = 3
   obj.jumpRange = 1
   obj.maxHealth = 10
-  obj.attacks = {Attack:new(obj), Attack:new(obj)}
+  obj.attacks = {Attack:new(obj), Attack:new(obj), NoAttack:new(obj)}
 
   obj:setUp()
 

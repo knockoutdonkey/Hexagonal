@@ -135,12 +135,6 @@ function Tile:draw()
     a=255
   }
 
-  -- if self.waterLevel > 0 then
-  --   groundColor.r = 80
-  --   groundColor.g = 100
-  --   groundColor.b = 155 + 100 * self.waterLevel
-  -- end
-
   if self.highlighted then
     groundColor.r = 70 + 185 / 5 * self:getHeight()
     groundColor.g = 75 + 50 / 5 * self:getHeight()
