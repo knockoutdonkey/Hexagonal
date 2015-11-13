@@ -2,7 +2,7 @@ local World = {}
 
 World.instance = nil
 World.size = 5
-World.waterNum = 0
+World.waterNum = 25
 World.playerUnitNum = 3
 World.enemyUnitNum = 3
 

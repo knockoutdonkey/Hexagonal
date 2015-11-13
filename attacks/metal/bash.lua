@@ -25,7 +25,7 @@ function Bash:getRange()
     local currentTile = World.instance:get(coord)
 
     while currentTile:getHeight() <= lastTile:getHeight() and -- can only lower in height
-          not currentTile:getBlocking() and                   -- can not go over water
+          not lastTile:hasWater() and                         -- can more than 1 in water
           not (lastTile.item and                              -- last tile cannot have a unit
           World.instance:get(self.unit.coord) ~= lastTile) do -- unless that tile was the first tile
       table.insert(range, currentTile.coord)
@@ -46,19 +46,15 @@ function Bash:perform(tile)
   local startTile = World.instance:get(self.unit.coord)
 
   -- move in direction until stopped
+  local currentTile = World.instance:get(self.unit.coord)
   local nextTile = World.instance:get(self.unit.coord:add(direction))
-  while not nextTile.item and nextTile.attackHighlighted do
-    World.instance:get(self.unit.coord).item = nil
-
-    self.unit.coord = nextTile.coord:copy()
-    nextTile.item = self.unit
-
+  while nextTile.attackHighlighted and self.unit:place(nextTile.coord) do
+    currentTile = nextTile
     nextTile = World.instance:get(nextTile.coord:add(direction))
   end
 
   -- damage any unit that is hit
-  local currentTile = World.instance:get(self.unit.coord)
-  if nextTile.item then
+  if nextTile.item and nextTile:getHeight() < currentTile:getHeight() then
     nextTile.item:damage((startTile:getHeight() - currentTile:getHeight() + 1) * self.damage)
   end
 

@@ -28,7 +28,7 @@ function Tile:new(coordOrX, y)
   obj.attackHighlighted = false
 
   obj.height = 0
-  obj:setHeight(math.random(1, 2)) -- use setter and getter to manipulate
+  obj:setHeight(math.random(1, 3)) -- use setter and getter to manipulate
 
   return obj
 end
@@ -84,12 +84,16 @@ function Tile:getHeight()
 end
 
 function Tile:getBlocking()
-  return self.waterLevel > .1 or self.height > 100
+  return self.height > 100
 end
 
 function Tile:addWater()
   self.waterLevel = self.waterLevel + 1
   self:iterateWaterFlow()
+end
+
+function Tile:hasWater()
+  return self.waterLevel > .3
 end
 
 local waterQuantum = .1
@@ -135,16 +139,19 @@ function Tile:draw()
     a=255
   }
 
+  local highlightColor = {r = 0, b = 0, c = 0, a = 0}
   if self.highlighted then
-    groundColor.r = 70 + 185 / 5 * self:getHeight()
-    groundColor.g = 75 + 50 / 5 * self:getHeight()
-    groundColor.b = 70 + 185 / 5 * self:getHeight()
+    highlightColor.r = 70 + 185 / 5 * self:getHeight()
+    highlightColor.g = 75 + 50 / 5 * self:getHeight()
+    highlightColor.b = 70 + 185 / 5 * self:getHeight()
+    highlightColor.a = 200
   end
 
   if self.attackHighlighted then
-    groundColor.r = 150 + 105 / 5 * self:getHeight()
-    groundColor.g = 50 + 0 / 5 * self:getHeight()
-    groundColor.b = 50 + 0 / 5 * self:getHeight()
+    highlightColor.r = 150 + 105 / 5 * self:getHeight()
+    highlightColor.g = 50 + 0 / 5 * self:getHeight()
+    highlightColor.b = 50 + 0 / 5 * self:getHeight()
+    highlightColor.a = 200
   end
 
   if Tile.selected == self then
@@ -179,20 +186,35 @@ function Tile:draw()
 
   -- draw water
   if self.waterLevel > 0 then
-    love.graphics.setColor(50, 70, 255, math.min(self.waterLevel * 3 * 255, 255))
-    love.graphics.polygon('fill', Tile.side * (1 + self.coord.x * 1.5 + self.coord.y * 1.5), .866 * -Tile.side * Tile.tilt * (0 - self.coord.x + self.coord.y) - self.height * tileRaise,
-                                Tile.side * (1 + self.coord.x * 1.5 + self.coord.y * 1.5), .866 * -Tile.side * Tile.tilt * (0 - self.coord.x + self.coord.y) - (self.height + self.waterLevel) * tileRaise,
-                                Tile.side * (.5 + self.coord.x * 1.5 + self.coord.y * 1.5), .866 * -Tile.side * Tile.tilt * (1 - self.coord.x + self.coord.y) - (self.height + self.waterLevel) * tileRaise,
-                                Tile.side * (-.5 + self.coord.x * 1.5 + self.coord.y * 1.5), .866 * -Tile.side * Tile.tilt * (1 - self.coord.x + self.coord.y) - (self.height + self.waterLevel) * tileRaise,
-                                Tile.side * (-1 + self.coord.x * 1.5 + self.coord.y * 1.5), .866 * -Tile.side * Tile.tilt * (0 - self.coord.x + self.coord.y) - (self.height + self.waterLevel) * tileRaise,
-                                Tile.side * (-1 + self.coord.x * 1.5 + self.coord.y * 1.5), .866 * -Tile.side * Tile.tilt * (0 - self.coord.x + self.coord.y) - self.height * tileRaise,
-                                Tile.side * (-.5 + self.coord.x * 1.5 + self.coord.y * 1.5), .866 * -Tile.side * Tile.tilt * (-1 - self.coord.x + self.coord.y) - self.height * tileRaise,
-                                Tile.side * (.5 + self.coord.x * 1.5 + self.coord.y * 1.5), .866 * -Tile.side * Tile.tilt * (-1 - self.coord.x + self.coord.y) - self.height * tileRaise)
+    if self:hasWater() then
+      love.graphics.setColor(50, 70,255, 255)
+    else
+      love.graphics.setColor(50, 70, 255, math.min(self.waterLevel * 2 * 255, 255))
+    end
+    love.graphics.polygon('fill', Tile.side * (1 + self.coord.x * 1.5 + self.coord.y * 1.5), .866 * -Tile.side * Tile.tilt * (0 - self.coord.x + self.coord.y) - self:getHeight() * tileRaise,
+                                  Tile.side * (1 + self.coord.x * 1.5 + self.coord.y * 1.5), .866 * -Tile.side * Tile.tilt * (0 - self.coord.x + self.coord.y) - (self:getHeight() + self.waterLevel) * tileRaise,
+                                  Tile.side * (.5 + self.coord.x * 1.5 + self.coord.y * 1.5), .866 * -Tile.side * Tile.tilt * (1 - self.coord.x + self.coord.y) - (self:getHeight() + self.waterLevel) * tileRaise,
+                                  Tile.side * (-.5 + self.coord.x * 1.5 + self.coord.y * 1.5), .866 * -Tile.side * Tile.tilt * (1 - self.coord.x + self.coord.y) - (self:getHeight() + self.waterLevel) * tileRaise,
+                                  Tile.side * (-1 + self.coord.x * 1.5 + self.coord.y * 1.5), .866 * -Tile.side * Tile.tilt * (0 - self.coord.x + self.coord.y) - (self:getHeight() + self.waterLevel) * tileRaise,
+                                  Tile.side * (-1 + self.coord.x * 1.5 + self.coord.y * 1.5), .866 * -Tile.side * Tile.tilt * (0 - self.coord.x + self.coord.y) - self:getHeight() * tileRaise,
+                                  Tile.side * (-.5 + self.coord.x * 1.5 + self.coord.y * 1.5), .866 * -Tile.side * Tile.tilt * (-1 - self.coord.x + self.coord.y) - self:getHeight() * tileRaise,
+                                  Tile.side * (.5 + self.coord.x * 1.5 + self.coord.y * 1.5), .866 * -Tile.side * Tile.tilt * (-1 - self.coord.x + self.coord.y) - self:getHeight() * tileRaise)
+  end
+
+  -- draw highlighting
+  if self.attackHighlighted or self.highlighted then
+    love.graphics.setColor(highlightColor.r, highlightColor.g, highlightColor.b, highlightColor.a)
+    love.graphics.polygon('fill', Tile.side * (1 + self.coord.x * 1.5 + self.coord.y * 1.5), .866 * -Tile.side * Tile.tilt * (0 - self.coord.x + self.coord.y) - (self:getHeight() + self.waterLevel) * tileRaise,
+                                  Tile.side * (.5 + self.coord.x * 1.5 + self.coord.y * 1.5), .866 * -Tile.side * Tile.tilt * (1 - self.coord.x + self.coord.y) - (self:getHeight() + self.waterLevel) * tileRaise,
+                                  Tile.side * (-.5 + self.coord.x * 1.5 + self.coord.y * 1.5), .866 * -Tile.side * Tile.tilt * (1 - self.coord.x + self.coord.y) - (self:getHeight() + self.waterLevel) * tileRaise,
+                                  Tile.side * (-1 + self.coord.x * 1.5 + self.coord.y * 1.5), .866 * -Tile.side * Tile.tilt * (0 - self.coord.x + self.coord.y) - (self:getHeight() + self.waterLevel) * tileRaise,
+                                  Tile.side * (-.5 + self.coord.x * 1.5 + self.coord.y * 1.5), .866 * -Tile.side * Tile.tilt * (-1 - self.coord.x + self.coord.y) - (self:getHeight() + self.waterLevel) * tileRaise,
+                                  Tile.side * (.5 + self.coord.x * 1.5 + self.coord.y * 1.5), .866 * -Tile.side * Tile.tilt * (-1 - self.coord.x + self.coord.y) - (self:getHeight() + self.waterLevel) * tileRaise)
   end
 
   -- show water level
-  -- love.graphics.setColor(255, 255, 255, 255)
-  -- love.graphics.print(self.waterLevel, Tile.side * (-.1 + self.coord.x * 1.5 + self.coord.y * 1.5), .866 * -Tile.side * Tile.tilt * (-.1 - self.coord.x + self.coord.y) - self:getHeight() * tileRaise)
+  love.graphics.setColor(255, 255, 255, 255)
+  love.graphics.print(self.waterLevel, Tile.side * (-.1 + self.coord.x * 1.5 + self.coord.y * 1.5), .866 * -Tile.side * Tile.tilt * (-.1 - self.coord.x + self.coord.y) - self:getHeight() * tileRaise)
 
   if self.item then
     self.item:draw()

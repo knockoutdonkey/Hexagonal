@@ -20,7 +20,6 @@ function Climb:getRange()
   for i, coord in ipairs(neighbors) do
     local tile = World.instance:get(coord)
     if math.abs(World.instance:get(coord):getHeight() - World.instance:get(self.unit.coord):getHeight()) >= 1 and
-       not tile:getBlocking() and
        not tile.item then
       table.insert(range, coord)
     end
@@ -29,12 +28,7 @@ function Climb:getRange()
 end
 
 function Climb:perform(tile)
-  World.instance:get(self.unit.coord).item = nil
-
-  self.unit.coord = tile.coord:copy()
-  tile.item = self.unit
-
-  return true
+  return self.unit:place(tile.coord)
 end
 
 return Climb

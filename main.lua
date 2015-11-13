@@ -24,6 +24,8 @@ Bash = require('attacks/metal/bash')
 Climb = require('attacks/metal/climb')
 SelfDestruct = require('attacks/metal/selfDestruct')
 
+Storm = require('attacks/waterKnight/storm')
+
 -- Utilities
 Controller = require('controller')
 ClickManager = require('clickManager')

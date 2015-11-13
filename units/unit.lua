@@ -58,16 +58,28 @@ function Unit:move(deltaCoord)
 end
 
 function Unit:moveTo(nextCoord)
-  local newTile = World.instance:get(nextCoord)
-  local oldTile = World.instance:get(self.coord)
-  if not newTile:getBlocking() and not newTile.item and newTile.highlighted and self.movesLeft and self.ready then
+  local nextTile = World.instance:get(nextCoord)
+  if nextTile.highlighted and self.ready then
 
     self.movesLeft = self.movesLeft - self.coord:getDistance(nextCoord)
+    if nextTile:hasWater() then
+      self.movesLeft = 0
+    end
+
+    return self:place(nextCoord)
+  end
+  return false
+end
+
+-- Places tile at the nextCoord if nothing is preventing it from going there
+function Unit:place(nextCoord)
+  local prevTile = World.instance:get(self.coord)
+  local nextTile = World.instance:get(nextCoord)
+  if not nextTile.item then
     self.coord = nextCoord:copy()
 
-    oldTile.item = nil
-    newTile.item = self
-
+    prevTile.item = nil
+    nextTile.item = self
     return true
   end
   return false
@@ -90,14 +102,21 @@ function Unit:select()
       end
       tileHash[tile] = distanceLeft
 
-      if distanceLeft < 0 or tile:getBlocking() then
+      -- Only move while there is distance left
+      if distanceLeft < 0 then
         return
       end
 
+      -- Only allow movement through units of the same color
       if tile.item and tile.item.color ~= self.color then
         return
       end
       tile.highlighted = true
+
+      -- Only allow one move if in water
+      if tile:hasWater() and distanceLeft > 0 then
+        distanceLeft = 1
+      end
 
       for i, neighborCoord in ipairs(coord:getNeighbors()) do
         local nextTile = World.instance:get(neighborCoord)
