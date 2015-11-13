@@ -28,7 +28,7 @@ function Tile:new(coordOrX, y)
   obj.attackHighlighted = false
 
   obj.height = 0
-  obj:setHeight(math.random(0, 2)) -- use setter and getter to manipulate
+  obj:setHeight(math.random(1, 2)) -- use setter and getter to manipulate
 
   return obj
 end

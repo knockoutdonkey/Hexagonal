@@ -80,8 +80,16 @@ function Unit:select()
   else
     Unit.selected = self
 
+    local tileHash = {}
     function highlight(coord, distanceLeft)
       local tile = World.instance:get(coord)
+
+      -- if tile has already been visited more quickly, stop
+      if tileHash[tile] and tileHash[tile] > distanceLeft then
+        return
+      end
+      tileHash[tile] = distanceLeft
+
       if distanceLeft < 0 or tile:getBlocking() then
         return
       end
@@ -89,7 +97,6 @@ function Unit:select()
       if tile.item and tile.item.color ~= self.color then
         return
       end
-
       tile.highlighted = true
 
       for i, neighborCoord in ipairs(coord:getNeighbors()) do

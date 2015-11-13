@@ -47,7 +47,7 @@ function Bash:perform(tile)
 
   -- move in direction until stopped
   local nextTile = World.instance:get(self.unit.coord:add(direction))
-  while not nextTile.item and not nextTile:getBlocking() do
+  while not nextTile.item and nextTile.attackHighlighted do
     World.instance:get(self.unit.coord).item = nil
 
     self.unit.coord = nextTile.coord:copy()
