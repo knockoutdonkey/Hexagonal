@@ -214,7 +214,7 @@ function Tile:draw()
 
   -- show water level
   love.graphics.setColor(255, 255, 255, 255)
-  love.graphics.print(self.waterLevel, Tile.side * (-.1 + self.coord.x * 1.5 + self.coord.y * 1.5), .866 * -Tile.side * Tile.tilt * (-.1 - self.coord.x + self.coord.y) - self:getHeight() * tileRaise)
+  love.graphics.print(self.waterLevel, Tile.side * (-.4 + self.coord.x * 1.5 + self.coord.y * 1.5), .866 * -Tile.side * Tile.tilt * (.9 - self.coord.x + self.coord.y) - self:getHeight() * tileRaise)
 
   if self.item then
     self.item:draw()

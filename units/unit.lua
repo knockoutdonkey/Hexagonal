@@ -78,7 +78,7 @@ end
 function Unit:place(nextCoord)
   local prevTile = World.instance:get(self.coord)
   local nextTile = World.instance:get(nextCoord)
-  if not nextTile.item then
+  if not nextTile.item and not nextTile:getBlocking() then
     self.coord = nextCoord:copy()
 
     prevTile.item = nil

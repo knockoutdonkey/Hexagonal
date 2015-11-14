@@ -86,6 +86,10 @@ function HexCoord:getDirectionTo(toOtherCoord)
     dy = -1
   end
 
+  if dy == dx then
+    dy = 0
+  end
+
   return HexCoord:new(dx, dy)
 end
 

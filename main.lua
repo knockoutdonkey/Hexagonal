@@ -24,6 +24,7 @@ Bash = require('attacks/metal/bash')
 Climb = require('attacks/metal/climb')
 SelfDestruct = require('attacks/metal/selfDestruct')
 
+WaterBlast = require('attacks/waterKnight/waterBlast')
 Storm = require('attacks/waterKnight/storm')
 
 -- Utilities
