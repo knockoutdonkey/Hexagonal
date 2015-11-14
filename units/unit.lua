@@ -34,6 +34,8 @@ function Unit:new(coord, color)
 
   obj:setUp()
 
+  obj.tasks = {}
+
   return obj
 end
 
@@ -48,11 +50,21 @@ end
 function Unit:startTurn()
   self.movesLeft = self.moveRange
   self.ready = true
+
+  for i, task in ipairs(self.tasks) do
+    print(i, task)
+    task(self)
+  end
+  self.tasks = {}
 end
 
 function Unit:endTurn()
   self.movesLeft = 0
   self.ready = false
+end
+
+function Unit:addStartTurnTask(task)
+  table.insert(self.tasks, task)
 end
 
 -- TODO: check for hit collision before moving

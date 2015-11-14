@@ -10,7 +10,7 @@ function WaterKnight:new(coord, color)
 
   obj.image = love.graphics.newImage('assets/units/bowGuy.png')
 
-  obj.name = 'WaterKnight'
+  obj.name = 'Water Knight'
   obj.moveRange = 3
   obj.jumpRange = 1
   obj.maxHealth = 8
