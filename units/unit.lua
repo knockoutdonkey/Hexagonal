@@ -73,11 +73,12 @@ function Unit:move(deltaCoord)
 end
 
 function Unit:moveTo(nextCoord)
+  local startTile = World.instance:get(self.coord)
   local nextTile = World.instance:get(nextCoord)
   if nextTile.highlighted and self.ready then
 
     self.movesLeft = self.movesLeft - self.coord:getDistance(nextCoord)
-    if nextTile:hasWater() then
+    if nextTile:hasWater() or startTile:hasWater() then
       self.movesLeft = 0
     end
 

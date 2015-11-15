@@ -32,7 +32,6 @@ function Item:touched(unit)
 end
 
 function Item:draw()
-  print(debug.traceback())
   love.graphics.setColor(255, 255, 255, 255)
   pixelX, pixelY = World.instance:transformToPixels(self.coord)
   love.graphics.draw(self.image, pixelX - self.image:getWidth() / 2, pixelY - self.image:getHeight() / 2 - Tile.side / 2 + 8)
