@@ -14,28 +14,15 @@ end
 
 -- able to hit all
 function grenadeToss:getRange()
-  local neighbors = self.unit.coord:getAllWithin(2, 1)
-
-  local range = {}
-  for i, coord in ipairs(neighbors) do
-    if math.abs(World.instance:get(coord):getHeight() - World.instance:get(self.unit.coord):getHeight()) <= 4 then
-      table.insert(range, coord)
-    end
-  end
-  return range
+  return self.unit.coord:getAllWithin(2, 1)
 end
 
 function grenadeToss:perform(tile)
-  local coords = self:getRange()
-  local hit = false
-  for i, coord in ipairs(coords) do
-    local target = World.instance:get(coord).item
-    if target then
-      target:damage(self.damage)
-      hit = true
-    end
+  if not tile.item and not tile:hasWater() then
+    tile.item = Grenade:new(tile.coord, self.damage, 2)
+    return true
   end
-  return hit
+  return false
 end
 
 return grenadeToss

@@ -14,6 +14,7 @@ function World:new()
 
   self.instance = obj
 
+  -- create a grid of the correct size
   local grid = {}
   for x = -World.size, World.size do
     grid[x] = {}
@@ -27,6 +28,7 @@ function World:new()
   obj.playersTurn = true
   obj.playerUnits = {}
   obj.enemyUnits = {}
+  obj.items = {}
 
   obj.selectedAttack = nil
 
@@ -55,7 +57,7 @@ function World:placeUnits()
     repeat
       randomCoord = HexCoord:new(math.random(-World.size, World.size),
                                  math.random(-World.size, World.size))
-    until not self:get(randomCoord).item and not self:get(randomCoord):getBlocking()
+    until not self:get(randomCoord).unit and not self:get(randomCoord):getBlocking()
 
     local newUnit
     if i == World.playerUnitNum then
@@ -66,7 +68,6 @@ function World:placeUnits()
       newUnit = Commando:new(randomCoord, 'yellow')
     end
     newUnit.ready = true
-    self:get(randomCoord).item = newUnit
     table.insert(self.playerUnits, newUnit)
   end
 
@@ -75,7 +76,7 @@ function World:placeUnits()
     repeat
       randomCoord = HexCoord:new(math.random(-World.size, World.size),
                                math.random(-World.size, World.size))
-    until not self:get(randomCoord).item and not self:get(randomCoord):getBlocking()
+    until not self:get(randomCoord).unit and not self:get(randomCoord):getBlocking()
 
     local newUnit
     if i == World.enemyUnitNum then
@@ -85,7 +86,6 @@ function World:placeUnits()
     else
       newUnit = Metal:new(randomCoord, 'red')
     end
-    self:get(randomCoord).item = newUnit
     table.insert(self.enemyUnits, newUnit)
   end
 end
@@ -154,10 +154,19 @@ function World:removeUnit(unit)
   end
 end
 
+function World:removeItem(item)
+  for i, worldItem in ipairs(self.items) do
+    if worldItem == item then
+      table.remove(self.items, i)
+      return
+    end
+  end
+end
+
 function World:moveSelectedTo(coord)
 
-  if Tile.selected and Tile.selected.item then
-    local unit = Tile.selected.item
+  if Tile.selected and Tile.selected.unit then
+    local unit = Tile.selected.unit
 
     if not unit.coord:equals(coord) then
       unit:moveTo(coord)
@@ -168,18 +177,18 @@ end
 
 function World:checkEndTurn()
   -- check to see if the turn is over
-  local currentUnits = nil
-  local otherUnits = nil
+  local currentTeam = nil
+  local otherTeam = nil
   if self.playersTurn then
-    currentUnits = self.playerUnits
-    otherUnits = self.enemyUnits
+    currentTeam = self.playerUnits
+    otherTeam = self.enemyUnits
   else
-    currentUnits = self.enemyUnits
-    otherUnits = self.playerUnits
+    currentTeam = self.enemyUnits
+    otherTeam = self.playerUnits
   end
 
   local readyToMove = 0
-  for i, unit in ipairs(currentUnits) do
+  for i, unit in ipairs(currentTeam) do
     if unit.ready then
       readyToMove = readyToMove + 1
     end
@@ -189,7 +198,11 @@ function World:checkEndTurn()
   if readyToMove <= 0 then
     self.playersTurn = not self.playersTurn
 
-    for i, unit in ipairs(otherUnits) do
+    for i, item in ipairs(self.items) do
+      item:startTurn()
+    end
+
+    for i, unit in ipairs(otherTeam) do
       unit:startTurn()
     end
   end

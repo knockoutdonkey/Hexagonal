@@ -8,7 +8,9 @@ Commando = require('units/commando')
 Metal = require('units/metal')
 WaterKnight = require('units/waterKnight')
 
-Grenade = require('units/grenade')
+-- Items
+Item = require('items/item')
+Grenade = require('items/grenade')
 
 -- Attacks
 Attack = require('attacks/attack')

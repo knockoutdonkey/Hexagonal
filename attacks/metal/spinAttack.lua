@@ -29,7 +29,7 @@ function SpinAttack:perform(tile)
   local coords = self:getRange()
   local hit = false
   for i, coord in ipairs(coords) do
-    local target = World.instance:get(coord).item
+    local target = World.instance:get(coord).unit
     if target then
       target:damage(self.damage)
       hit = true

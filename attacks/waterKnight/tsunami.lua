@@ -1,9 +1,9 @@
-SpinAttack = {}
-setmetatable(SpinAttack, Attack)
+Tsunami = {}
+setmetatable(Tsunami, Attack)
 
-function SpinAttack:new(unit)
+function Tsunami:new(unit)
 
-  local obj = Attack:new(unit, love.graphics.newImage('assets/attackIcons/SpinAttackIcon.png'))
+  local obj = Attack:new(unit, love.graphics.newImage('assets/attackIcons/TsunamiIcon.png'))
   setmetatable(obj, self)
   self.__index = self
 
@@ -13,7 +13,7 @@ function SpinAttack:new(unit)
 end
 
 -- able to hit all
-function SpinAttack:getRange()
+function Tsunami:getRange()
   local neighbors = self.unit.coord:getNeighbors()
 
   local range = {}
@@ -25,11 +25,11 @@ function SpinAttack:getRange()
   return range
 end
 
-function SpinAttack:perform(tile)
+function Tsunami:perform(tile)
   local coords = self:getRange()
   local hit = false
   for i, coord in ipairs(coords) do
-    local target = World.instance:get(coord).item
+    local target = World.instance:get(coord).unit
     if target then
       target:damage(self.damage)
       hit = true
@@ -38,4 +38,4 @@ function SpinAttack:perform(tile)
   return hit
 end
 
-return SpinAttack
+return Tsunami

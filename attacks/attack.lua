@@ -29,7 +29,7 @@ end
 -- Private
 -- Returns whether or not the attack did anything
 function Attack:perform(tile)
-  local targetUnit = tile.item
+  local targetUnit = tile.unit
   if targetUnit then
     targetUnit:damage(self.damage)
     return true

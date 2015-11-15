@@ -3,7 +3,7 @@ setmetatable(Bash, Attack)
 
 function Bash:new(unit)
 
-  local obj = Attack:new(unit, love.graphics.newImage('assets/attackIcons/SpinAttackIcon.png'))
+  local obj = Attack:new(unit, love.graphics.newImage('assets/attackIcons/BashIcon.png'))
   setmetatable(obj, self)
   self.__index = self
 
@@ -26,7 +26,7 @@ function Bash:getRange()
 
     while currentTile:getHeight() <= lastTile:getHeight() and -- can only lower in height
           not lastTile:hasWater() and                         -- can more than 1 in water
-          not (lastTile.item and                              -- last tile cannot have a unit
+          not (lastTile.unit and                              -- last tile cannot have a unit
           World.instance:get(self.unit.coord) ~= lastTile) do -- unless that tile was the first tile
       table.insert(range, currentTile.coord)
 
@@ -54,8 +54,8 @@ function Bash:perform(tile)
   end
 
   -- damage any unit that is hit
-  if nextTile.item and nextTile:getHeight() < currentTile:getHeight() then
-    nextTile.item:damage((startTile:getHeight() - currentTile:getHeight() + 1) * self.damage)
+  if nextTile.unit and nextTile:getHeight() < currentTile:getHeight() then
+    nextTile.unit:damage((startTile:getHeight() - currentTile:getHeight() + 1) * self.damage)
   end
 
   return true

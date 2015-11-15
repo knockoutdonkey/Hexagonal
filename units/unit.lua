@@ -10,12 +10,12 @@ function Unit:new(coord, color)
   self.__index = self
 
   -- Don't create a Unit if there is already something at that location
-  if World.instance:get(coord).item then
+  if World.instance:get(coord).unit then
     print('Unit could not be placed')
     return false
   end
 
-  World.instance:get(coord).item = obj
+  World.instance:get(coord).unit = obj
 
   obj.coord = coord:copy()
   obj.color = color
@@ -90,11 +90,15 @@ end
 function Unit:place(nextCoord)
   local prevTile = World.instance:get(self.coord)
   local nextTile = World.instance:get(nextCoord)
-  if not nextTile.item and not nextTile:getBlocking() then
+  if not nextTile.unit and not nextTile:getBlocking() then
     self.coord = nextCoord:copy()
 
-    prevTile.item = nil
-    nextTile.item = self
+    prevTile.unit = nil
+    nextTile.unit = self
+
+    if nextTile.item then
+      nextTile.item:touched(self)
+    end
     return true
   end
   return false
@@ -123,7 +127,7 @@ function Unit:select()
       end
 
       -- Only allow movement through units of the same color
-      if tile.item and tile.item.color ~= self.color then
+      if tile.unit and tile.unit.color ~= self.color then
         return
       end
       tile.highlighted = true
@@ -155,7 +159,7 @@ end
 
 function Unit:kill()
   World.instance:removeUnit(self)
-  World.instance:get(self.coord).item = nil
+  World.instance:get(self.coord).unit = nil
 end
 
 function Unit:draw()

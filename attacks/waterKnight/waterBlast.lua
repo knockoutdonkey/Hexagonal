@@ -18,7 +18,7 @@ function WaterBlast:getRange()
 end
 
 function WaterBlast:perform(tile)
-  local unit = tile.item
+  local unit = tile.unit
   if unit then
     unit:damage(self.damage)
 

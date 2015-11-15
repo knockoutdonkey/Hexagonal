@@ -24,7 +24,7 @@ function SelfDestruct:perform(tile)
     local height = World.instance:get(selfUnit.coord):getHeight()
     for i, neighborCoord in ipairs(selfUnit.coord:getAllWithin(size, 0)) do
       local tile = World.instance:get(neighborCoord)
-      local unit = tile.item
+      local unit = tile.unit
       if unit then
         unit:damage(selfUnit.attacks[4].damage)
       end

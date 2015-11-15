@@ -23,6 +23,7 @@ function Tile:new(coordOrX, y)
   obj.waterLevel = 0
 
   obj.item = nil
+  obj.unit = nil
   obj.highlighted = false
 
   obj.attackHighlighted = false
@@ -46,8 +47,8 @@ function Tile:select()
     Tile.selected = self
   end
 
-  if self.item then
-    self.item:select()
+  if self.unit then
+    self.unit:select()
   else
     if Unit.selected then
       Unit.selected:select()
@@ -215,6 +216,10 @@ function Tile:draw()
   -- show water level
   love.graphics.setColor(255, 255, 255, 255)
   love.graphics.print(self.waterLevel, Tile.side * (-.4 + self.coord.x * 1.5 + self.coord.y * 1.5), .866 * -Tile.side * Tile.tilt * (.9 - self.coord.x + self.coord.y) - self:getHeight() * tileRaise)
+
+  if self.unit then
+    self.unit:draw()
+  end
 
   if self.item then
     self.item:draw()
