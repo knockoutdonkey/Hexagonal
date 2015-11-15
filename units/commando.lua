@@ -8,7 +8,7 @@ function Commando:new(coord, color)
   setmetatable(obj, self)
   self.__index = self
 
-  obj.image = love.graphics.newImage('assets/units/knifeGuy.png')
+  obj.image = love.graphics.newImage('assets/units/commando.png')
 
   obj.name = 'Commando'
   obj.moveRange = 4
