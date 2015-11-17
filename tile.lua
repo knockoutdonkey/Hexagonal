@@ -2,7 +2,7 @@ local Tile = {}
 
 Tile.side = 25
 Tile.tilt = .8
-Tile.vertical = .7
+Tile.vertical = 1
 Tile.selected = nil
 
 function Tile:new(coordOrX, y)
@@ -161,7 +161,7 @@ function Tile:draw()
     groundColor.b = 255
   end
 
-  local tileRaise = Tile.side * .7 * math.sqrt(1 - Tile.tilt * Tile.tilt)
+  local tileRaise = Tile.side * Tile.vertical * math.sqrt(1 - Tile.tilt * Tile.tilt)
 
   -- draw height
   for level = 0, self:getHeight() - 1 do
