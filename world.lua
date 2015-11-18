@@ -1,12 +1,6 @@
 local World = {}
 
 World.instance = nil
-World.size = 5
-
--- Generation constants
-World.waterNum = 25
-World.playerUnitNum = 3
-World.enemyUnitNum = 3
 
 function World:new(worldData)
 
@@ -16,94 +10,19 @@ function World:new(worldData)
 
   self.instance = obj
 
-  obj.deadTile = Tile:new(HexCoord:new(1000, -1000))
-  obj.deadTile:setHeight(100)
-
-  obj.playersTurn = true
-  obj.playerUnits = {}
-  obj.enemyUnits = {}
-  obj.items = {}
+  obj.currentTurn = 1
 
   obj.selectedAttack = nil
 
-  -- create grid
-  if worldData then
-    print('creating loaded world')
-    local grid = {}
-    for x = -World.size, World.size do
-      grid[x] = {}
+  obj.grid = Grid:new()
+  obj.grid:randomlyFill()
 
-      for y = -World.size, World.size do
-        grid[x][y] = Tile:new(HexCoord:new(x, y), worldData[x][y].height, worldData[x][y].waterLevel)
-      end
-    end
-    obj.grid = grid
-    obj:placeUnits()
-  else
-    print('creating randomly generated world')
-    local grid = {}
-    for x = -World.size, World.size do
-      grid[x] = {}
-
-      for y = -World.size, World.size do
-        grid[x][y] = Tile:new(HexCoord:new(x, y))
-      end
-    end
-    obj.grid = grid
-
-    obj:placeWater()
-    obj:placeUnits()
+  -- make first team ready to go
+  for i, unit in ipairs(obj.grid.teams[1]) do
+    unit.ready = true
   end
 
   return obj
-end
-
-function World:placeWater()
-  for i = 1, World.waterNum do
-    local randomCoord = HexCoord:new(math.random(-World.size, World.size),
-                                     math.random(-World.size, World.size))
-    local tile = self:get(randomCoord)
-    tile:addWater()
-  end
-end
-
-function World:placeUnits()
-  local randomCoord
-  for i = 1, World.playerUnitNum do
-    repeat
-      randomCoord = HexCoord:new(math.random(-World.size, World.size),
-                                 math.random(-World.size, World.size))
-    until not self:get(randomCoord).unit and not self:get(randomCoord):getBlocking()
-
-    local newUnit
-    if i == World.playerUnitNum then
-      newUnit = Metal:new(randomCoord, 'yellow')
-    elseif i == World.playerUnitNum - 1 then
-      newUnit = WaterKnight:new(randomCoord, 'yellow')
-    else
-      newUnit = Commando:new(randomCoord, 'yellow')
-    end
-    newUnit.ready = true
-    table.insert(self.playerUnits, newUnit)
-  end
-
-  for i = 1, World.enemyUnitNum do
-    local randomCoord
-    repeat
-      randomCoord = HexCoord:new(math.random(-World.size, World.size),
-                               math.random(-World.size, World.size))
-    until not self:get(randomCoord).unit and not self:get(randomCoord):getBlocking()
-
-    local newUnit
-    if i == World.enemyUnitNum then
-      newUnit = Commando:new(randomCoord, 'red')
-    elseif i == World.enemyUnitNum - 1 then
-      newUnit = WaterKnight:new(randomCoord, 'red')
-    else
-      newUnit = Metal:new(randomCoord, 'red')
-    end
-    table.insert(self.enemyUnits, newUnit)
-  end
 end
 
 function World:showAttackRange(attackNum)
@@ -153,34 +72,14 @@ function World:attack(coord)
 end
 
 function World:removeUnit(unit)
-  for i = 1, #self.playerUnits do
-    local playerUnit = self.playerUnits[i]
-    if playerUnit == unit then
-      table.remove(self.playerUnits, i)
-      return
-    end
-  end
-
-  for i = 1, #self.enemyUnits do
-    local enemyUnit = self.enemyUnits[i]
-    if enemyUnit == unit then
-      table.remove(self.enemyUnits, i)
-      return
-    end
-  end
+  self.grid:removeUnit(unit)
 end
 
 function World:removeItem(item)
-  for i, worldItem in ipairs(self.items) do
-    if worldItem == item then
-      table.remove(self.items, i)
-      return
-    end
-  end
+  self.grid:removeItem(item)
 end
 
 function World:moveSelectedTo(coord)
-
   if Tile.selected and Tile.selected.unit then
     local unit = Tile.selected.unit
 
@@ -191,17 +90,10 @@ function World:moveSelectedTo(coord)
   end
 end
 
+-- TODO: rethink how to decouple this function from gird
 function World:checkEndTurn()
   -- check to see if the turn is over
-  local currentTeam = nil
-  local otherTeam = nil
-  if self.playersTurn then
-    currentTeam = self.playerUnits
-    otherTeam = self.enemyUnits
-  else
-    currentTeam = self.enemyUnits
-    otherTeam = self.playerUnits
-  end
+  local currentTeam = self.grid.teams[self.currentTurn]
 
   local readyToMove = 0
   for i, unit in ipairs(currentTeam) do
@@ -210,29 +102,29 @@ function World:checkEndTurn()
     end
   end
 
-  -- make other team ready to go
+  -- if turn is over make other team ready to go
   if readyToMove <= 0 then
-    self.playersTurn = not self.playersTurn
+    self.currentTurn = (self.currentTurn % #self.grid.teams) + 1
 
-    for i, item in ipairs(self.items) do
+    for i, item in ipairs(self.grid.items) do
       item:startTurn()
     end
 
-    for i, unit in ipairs(otherTeam) do
+    for i, unit in ipairs(self.grid.teams[self.currentTurn]) do
       unit:startTurn()
     end
   end
 end
 
 function World:unhighlight()
-  for x, y, tile in self:tiles(root) do
+  for x, y, tile in self.grid:tiles(root) do
     tile.highlighted = false
     tile.attackHighlighted = false
   end
 end
 
 function World:draw()
-  for x, y, tile in self:tiles(root) do
+  for x, y, tile in self.grid:tiles(root) do
     tile:draw()
   end
 
@@ -243,24 +135,7 @@ end
 
 -- Returns the tile on the board, or a tile that won't be rendered if coordinates do not match a tile
 function World:get(coord)
-  if not self.grid[coord.x] or not self.grid[coord.x][coord.y] then
-    return self.deadTile
-  end
-  return self.grid[coord.x][coord.y]
-end
-
-function World:eachTile()
-  for x = -World.size, World.size do
-    for y = World.size, -World.size, -1 do
-      local tile = self.grid[x][y]
-      coroutine.yield(x, y, tile)
-    end
-  end
-end
-
--- Warning: Don't call this function (call eachTile instead)
-function World:tiles()
-  return coroutine.wrap(function() self:eachTile() end)
+  return self.grid:get(coord)
 end
 
 function World:transformToPixels(coord)
@@ -273,11 +148,6 @@ end
 
 -- Takes height of tile into account
 function World:transformToCoords(pX, pY)
-  -- local tile = self.grid[x][y]
-  -- local tileRaise = tile.side * tile.vertical * math.sqrt(1 - tile.tilt * tile.tilt)
-  -- local y = ((pX) / (tile.side * 1.5) - (pY + tile.height * tileRaise) / (.866 * tile.side * tile.tilt)) / 2
-  -- local x = (pX) / (tile.side * 1.5) - y
-  -- return x, y
   local tileRaise = Tile.side * Tile.vertical * math.sqrt(1 - Tile.tilt * Tile.tilt)
   local y = ((pX) / (Tile.side * 1.5) - (pY) / (.866 * Tile.side * Tile.tilt)) / 2
   local x = (pX) / (Tile.side * 1.5) - y

@@ -26,9 +26,6 @@ function ClickManager:click(pX, pY)
   end
 
   -- TODO: check for click on top of tile, instead of bottem
-  for i = World.size, -World.size, -1 do
-
-  end
 
 end
 

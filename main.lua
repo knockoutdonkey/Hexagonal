@@ -1,5 +1,6 @@
 -- Terrain
 World = require('World')
+Grid = require('Grid')
 Tile = require('tile')
 
 -- Units
