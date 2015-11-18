@@ -55,6 +55,8 @@ local rDown = false
 local fDown = false
 local gDown = false
 local tDown = false
+local sDown = false
+local numDown = false
 function love.update(dt)
 
   if love.mouse.isDown('l') then
@@ -115,14 +117,24 @@ function love.update(dt)
     gDown = false
   end
 
-  if love.keyboard.isDown('s') then
-    SaveManager.instance:saveLevel(World.instance, 1)
-    print('saved')
+  if love.keyboard.isDown('s')then
+    if not sDown then
+      SaveManager.instance:saveLevel(World.instance, 1)
+      print('saved')
+      sDown = true
+    end
+  else
+    sDown = false
   end
 
-  if love.keyboard.isDown('1') then
-    SaveManager.instance:loadLevel(World.instance, 1)
-    print('loaded level 1')
+  if love.keyboard.isDown('1')then
+    if not numDown then
+      SaveManager.instance:loadLevel(World.instance, 1)
+      print('loaded level 1')
+      numDown = true
+    end
+  else
+    numDown = false
   end
 end
 
