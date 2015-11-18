@@ -18,7 +18,7 @@ function Tsunami:getRange()
 
   local range = {}
   for i, coord in ipairs(neighbors) do
-    if math.abs(World.instance:get(coord):getHeight() - World.instance:get(self.unit.coord):getHeight()) <= 1 then
+    if math.abs(Game.instance:get(coord):getHeight() - Game.instance:get(self.unit.coord):getHeight()) <= 1 then
       table.insert(range, coord)
     end
   end
@@ -29,7 +29,7 @@ function Tsunami:perform(tile)
   local coords = self:getRange()
   local hit = false
   for i, coord in ipairs(coords) do
-    local target = World.instance:get(coord).unit
+    local target = Game.instance:get(coord).unit
     if target then
       target:damage(self.damage)
       hit = true

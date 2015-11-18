@@ -1,8 +1,8 @@
-local World = {}
+local Game = {}
 
-World.instance = nil
+Game.instance = nil
 
-function World:new(worldData)
+function Game:new(GameData)
 
   local obj = {}
   setmetatable(obj, self)
@@ -25,7 +25,7 @@ function World:new(worldData)
   return obj
 end
 
-function World:showAttackRange(attackNum)
+function Game:showAttackRange(attackNum)
   self:unhighlight()
   local unit = Unit.selected
   if unit then
@@ -44,7 +44,7 @@ function World:showAttackRange(attackNum)
   end
 end
 
-function World:attack(coord)
+function Game:attack(coord)
   local attackResult = false
   local tile = self:get(coord)
   if self.selectedAttack then
@@ -71,15 +71,15 @@ function World:attack(coord)
   return attackResult
 end
 
-function World:removeUnit(unit)
+function Game:removeUnit(unit)
   self.grid:removeUnit(unit)
 end
 
-function World:removeItem(item)
+function Game:removeItem(item)
   self.grid:removeItem(item)
 end
 
-function World:moveSelectedTo(coord)
+function Game:moveSelectedTo(coord)
   if Tile.selected and Tile.selected.unit then
     local unit = Tile.selected.unit
 
@@ -91,7 +91,7 @@ function World:moveSelectedTo(coord)
 end
 
 -- TODO: rethink how to decouple this function from gird
-function World:checkEndTurn()
+function Game:checkEndTurn()
   -- check to see if the turn is over
   local currentTeam = self.grid.teams[self.currentTurn]
 
@@ -116,14 +116,14 @@ function World:checkEndTurn()
   end
 end
 
-function World:unhighlight()
+function Game:unhighlight()
   for x, y, tile in self.grid:tiles(root) do
     tile.highlighted = false
     tile.attackHighlighted = false
   end
 end
 
-function World:draw()
+function Game:draw()
   for x, y, tile in self.grid:tiles(root) do
     tile:draw()
   end
@@ -134,11 +134,11 @@ function World:draw()
 end
 
 -- Returns the tile on the board, or a tile that won't be rendered if coordinates do not match a tile
-function World:get(coord)
+function Game:get(coord)
   return self.grid:get(coord)
 end
 
-function World:transformToPixels(coord)
+function Game:transformToPixels(coord)
   local tile = self:get(coord)
   local tileRaise = tile.side * tile.vertical * math.sqrt(1 - tile.tilt * tile.tilt)
   local pX = tile.side * 1.5 * (coord.x + coord.y)
@@ -147,7 +147,7 @@ function World:transformToPixels(coord)
 end
 
 -- Takes height of tile into account
-function World:transformToCoords(pX, pY)
+function Game:transformToCoords(pX, pY)
   local tileRaise = Tile.side * Tile.vertical * math.sqrt(1 - Tile.tilt * Tile.tilt)
   local y = ((pX) / (Tile.side * 1.5) - (pY) / (.866 * Tile.side * Tile.tilt)) / 2
   local x = (pX) / (Tile.side * 1.5) - y
@@ -167,4 +167,4 @@ function World:transformToCoords(pX, pY)
   return coord
 end
 
-return World
+return Game

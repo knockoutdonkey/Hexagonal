@@ -25,28 +25,28 @@ end
 
 function Controller:rClick(pX, pY)
   local coord = self:getScreenCoord(pX, pY)
-  World.instance:get(coord):raise()
+  Game.instance:get(coord):raise()
 end
 
 function Controller:fClick(pX, pY)
   local coord = self:getScreenCoord(pX, pY)
-  World.instance:get(coord):lower()
+  Game.instance:get(coord):lower()
 end
 
 function Controller:tClick(pX, pY)
   local coord = self:getScreenCoord(pX, pY)
-  World.instance:get(coord):addWater()
+  Game.instance:get(coord):addWater()
 end
 
 function Controller:gClick(pX, pY)
   local coord = self:getScreenCoord(pX, pY)
-  World.instance:get(coord):removeWater()
+  Game.instance:get(coord):removeWater()
 end
 
 function Controller:getScreenCoord(pX, pY)
   local width = love.graphics:getWidth()
   local height = love.graphics:getHeight()
-  return World.instance:transformToCoords(pX - width / 2, pY - height / 2)
+  return Game.instance:transformToCoords(pX - width / 2, pY - height / 2)
 end
 
 return Controller

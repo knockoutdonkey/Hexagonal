@@ -18,8 +18,8 @@ function Climb:getRange()
 
   local range = {}
   for i, coord in ipairs(neighbors) do
-    local tile = World.instance:get(coord)
-    if math.abs(World.instance:get(coord):getHeight() - World.instance:get(self.unit.coord):getHeight()) >= 1 and
+    local tile = Game.instance:get(coord)
+    if math.abs(Game.instance:get(coord):getHeight() - Game.instance:get(self.unit.coord):getHeight()) >= 1 and
        not tile.unit then
       table.insert(range, coord)
     end

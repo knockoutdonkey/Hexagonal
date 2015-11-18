@@ -29,14 +29,14 @@ function Grenade:explode()
 
   -- damage surrounding neighbors by one less than damage
   for i, neighborCoord in ipairs(self.coord:getNeighbors()) do
-    local tile = World.instance:get(neighborCoord)
+    local tile = Game.instance:get(neighborCoord)
     if tile.unit then
       tile.unit:damage(self.damage - 1)
     end
   end
 
   -- damage center and create crater
-  local tile = World.instance:get(self.coord)
+  local tile = Game.instance:get(self.coord)
   tile:lower()
   if tile.unit then
     tile.unit:damage(self.damage)

@@ -21,7 +21,7 @@ function Storm:perform(tile)
   local neighbors = self:getRange()
 
   for i, neighbor in ipairs(neighbors) do
-    local tile = World.instance:get(neighbor)
+    local tile = Game.instance:get(neighbor)
     if tile.unit and not tile.coord:equals(self.unit.coord) then
       tile.unit:damage(self.damage)
     end

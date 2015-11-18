@@ -7,8 +7,8 @@ function Item:new(coord)
   self.__index = self
 
   obj.coord = coord
-  World.instance:get(coord).item = obj
-  table.insert(World.instance.items, obj)
+  Game.instance:get(coord).item = obj
+  table.insert(Game.instance.items, obj)
 
   obj.image = love.graphics.newImage('assets/units/grenade.png')
   obj.image:setFilter('nearest', 'nearest')
@@ -17,8 +17,8 @@ function Item:new(coord)
 end
 
 function Item:remove()
-  World.instance:get(self.coord).item = nil
-  World.instance:removeItem(self)
+  Game.instance:get(self.coord).item = nil
+  Game.instance:removeItem(self)
 end
 
 -- Overwrite this for start turn behavior
@@ -33,7 +33,7 @@ end
 
 function Item:draw()
   love.graphics.setColor(255, 255, 255, 255)
-  pixelX, pixelY = World.instance:transformToPixels(self.coord)
+  pixelX, pixelY = Game.instance:transformToPixels(self.coord)
   love.graphics.draw(self.image, pixelX - self.image:getWidth() / 2, pixelY - self.image:getHeight() / 2 - Tile.side / 2 + 8)
 end
 

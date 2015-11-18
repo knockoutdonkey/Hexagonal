@@ -21,9 +21,9 @@ end
 function SelfDestruct:perform(tile)
   self.unit:addStartTurnTask(function(selfUnit)
     local size = 2
-    local height = World.instance:get(selfUnit.coord):getHeight()
+    local height = Game.instance:get(selfUnit.coord):getHeight()
     for i, neighborCoord in ipairs(selfUnit.coord:getAllWithin(size, 0)) do
-      local tile = World.instance:get(neighborCoord)
+      local tile = Game.instance:get(neighborCoord)
       local unit = tile.unit
       if unit then
         unit:damage(selfUnit.attacks[4].damage)

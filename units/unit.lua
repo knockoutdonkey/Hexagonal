@@ -10,12 +10,12 @@ function Unit:new(coord, color)
   self.__index = self
 
   -- Don't create a Unit if there is already something at that location
-  if World.instance:get(coord).unit then
+  if Game.instance:get(coord).unit then
     print('Unit could not be placed')
     return false
   end
 
-  World.instance:get(coord).unit = obj
+  Game.instance:get(coord).unit = obj
 
   obj.coord = coord:copy()
   obj.color = color
@@ -72,8 +72,8 @@ function Unit:move(deltaCoord)
 end
 
 function Unit:moveTo(nextCoord)
-  local startTile = World.instance:get(self.coord)
-  local nextTile = World.instance:get(nextCoord)
+  local startTile = Game.instance:get(self.coord)
+  local nextTile = Game.instance:get(nextCoord)
   if nextTile.highlighted and self.ready then
 
     self.movesLeft = self.movesLeft - self.coord:getDistance(nextCoord)
@@ -88,8 +88,8 @@ end
 
 -- Places tile at the nextCoord if nothing is preventing it from going there
 function Unit:place(nextCoord)
-  local prevTile = World.instance:get(self.coord)
-  local nextTile = World.instance:get(nextCoord)
+  local prevTile = Game.instance:get(self.coord)
+  local nextTile = Game.instance:get(nextCoord)
   if not nextTile.unit and not nextTile:getBlocking() then
     self.coord = nextCoord:copy()
 
@@ -105,7 +105,7 @@ function Unit:place(nextCoord)
 end
 
 function Unit:select()
-  World.instance:unhighlight()
+  Game.instance:unhighlight()
   if Unit.selected == self then
     Unit.selected = nil
   else
@@ -113,7 +113,7 @@ function Unit:select()
 
     local tileHash = {}
     function highlight(coord, distanceLeft)
-      local tile = World.instance:get(coord)
+      local tile = Game.instance:get(coord)
 
       -- if tile has already been visited more quickly, stop
       if tileHash[tile] and tileHash[tile] > distanceLeft then
@@ -138,7 +138,7 @@ function Unit:select()
       end
 
       for i, neighborCoord in ipairs(coord:getNeighbors()) do
-        local nextTile = World.instance:get(neighborCoord)
+        local nextTile = Game.instance:get(neighborCoord)
         if math.abs(tile.height - nextTile.height) <= self.jumpRange then
           highlight(neighborCoord, distanceLeft - 1)
         end
@@ -158,8 +158,8 @@ function Unit:damage(damage)
 end
 
 function Unit:kill()
-  World.instance:removeUnit(self)
-  World.instance:get(self.coord).unit = nil
+  Game.instance:removeUnit(self)
+  Game.instance:get(self.coord).unit = nil
 end
 
 function Unit:draw()
@@ -178,14 +178,14 @@ function Unit:draw()
     end
   end
 
-  pixelX, pixelY = World.instance:transformToPixels(self.coord)
+  pixelX, pixelY = Game.instance:transformToPixels(self.coord)
   love.graphics.draw(self.image, pixelX - self.image:getWidth() / 2, pixelY - self.image:getWidth() / 2 - Tile.side / 2 - 4)
 
   self:drawHealthBar()
 end
 
 function Unit:drawHealthBar()
-  pixelX, pixelY = World.instance:transformToPixels(self.coord)
+  pixelX, pixelY = Game.instance:transformToPixels(self.coord)
 
   local healthLength = 30
   local healthHeight = 5

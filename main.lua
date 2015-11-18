@@ -1,5 +1,5 @@
 -- Terrain
-World = require('World')
+Game = require('Game')
 Grid = require('Grid')
 Tile = require('tile')
 
@@ -43,7 +43,7 @@ function love.load(arg)
 
   math.randomseed(os.time())
 
-  world = World:new()
+  game = Game:new()
   controller = Controller:new()
   clickManager = ClickManager:new()
   saveManager = SaveManager:new()
@@ -120,7 +120,7 @@ function love.update(dt)
 
   if love.keyboard.isDown('s')then
     if not sDown then
-      SaveManager.instance:saveLevel(World.instance, 1)
+      SaveManager.instance:saveLevel(Game.instance, 1)
       print('saved')
       sDown = true
     end
@@ -130,7 +130,7 @@ function love.update(dt)
 
   if love.keyboard.isDown('1')then
     if not numDown then
-      SaveManager.instance:loadLevel(World.instance, 1)
+      SaveManager.instance:loadLevel(Game.instance, 1)
       print('loaded level 1')
       numDown = true
     end
@@ -145,7 +145,7 @@ function love.draw(dt)
 
   love.graphics.translate(screenWidth / 2, screenHeigth / 2)
 
-  World.instance:draw()
+  Game.instance:draw()
 end
 -- love.filesystem.setIdentity('~/Practice/Lua/Hexagonal')
 

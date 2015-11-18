@@ -74,7 +74,7 @@ function Tile:setHeight(height)
   self:iterateWaterFlow()
   if self.height < oldHeight then
     for i, coord in ipairs(self.coord:getNeighbors()) do
-      World.instance:get(coord):iterateWaterFlow()
+      Game.instance:get(coord):iterateWaterFlow()
     end
   end
 end
@@ -96,7 +96,7 @@ function Tile:removeWater()
   while self.waterLevel > 0 do
     self.waterLevel = 0
     for i, neighborCoord in ipairs(self.coord:getNeighbors()) do
-      local tile = World.instance:get(neighborCoord)
+      local tile = Game.instance:get(neighborCoord)
       tile:iterateWaterFlow()
     end
   end
@@ -119,7 +119,7 @@ function Tile:iterateWaterFlow()
   local nextTiles = {}
   for i, neighborCoord in ipairs(neighborCoords) do
 
-    local neighborTile = World.instance:get(neighborCoord)
+    local neighborTile = Game.instance:get(neighborCoord)
 
     if neighborTile:getHeight() + neighborTile.waterLevel + waterQuantum < self:getHeight() + self.waterLevel and self.waterLevel > 0 then
 

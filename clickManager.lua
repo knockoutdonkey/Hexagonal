@@ -20,7 +20,7 @@ function ClickManager:click(pX, pY)
 
   -- check if a tile is clicked
   local coord = Controller:getScreenCoord(pX, pY)
-  local tile = World.instance:get(coord)
+  local tile = Game.instance:get(coord)
   if Tile.selected ~= tile and tile.coord.x ~= 1000 then
     tile:select()
   end
@@ -42,7 +42,7 @@ function ClickManager:endClick(pX, pY)
     for i, attack in ipairs(Unit.selected.attacks) do
       if math.abs(pX - attackBorder * i) < attackSize / 2 and
          math.abs(pY - height + attackBorder) < attackSize / 2 then
-        World.instance:showAttackRange(i)
+        Game.instance:showAttackRange(i)
         buttonClicked = true
       end
     end
@@ -50,12 +50,12 @@ function ClickManager:endClick(pX, pY)
 
   -- peform an attack or move selected character
   local coord = Controller:getScreenCoord(pX, pY)
-  if World.instance.selectedAttack then
+  if Game.instance.selectedAttack then
     if not buttonClicked then
-      World.instance:attack(coord)
+      Game.instance:attack(coord)
     end
   else
-    World.instance:moveSelectedTo(coord)
+    Game.instance:moveSelectedTo(coord)
   end
 end
 

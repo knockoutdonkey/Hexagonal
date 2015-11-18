@@ -20,19 +20,19 @@ function Bash:getRange()
   for i, direction in ipairs(directions) do
 
     local coord = self.unit.coord
-    local lastTile = World.instance:get(coord)
+    local lastTile = Game.instance:get(coord)
     coord = coord:add(direction)
-    local currentTile = World.instance:get(coord)
+    local currentTile = Game.instance:get(coord)
 
     while currentTile:getHeight() <= lastTile:getHeight() and -- can only lower in height
           not lastTile:hasWater() and                         -- can more than 1 in water
           not (lastTile.unit and                              -- last tile cannot have a unit
-          World.instance:get(self.unit.coord) ~= lastTile) do -- unless that tile was the first tile
+          Game.instance:get(self.unit.coord) ~= lastTile) do -- unless that tile was the first tile
       table.insert(range, currentTile.coord)
 
       lastTile = currentTile
       coord = coord:add(direction)
-      currentTile = World.instance:get(coord)
+      currentTile = Game.instance:get(coord)
     end
   end
   return range
@@ -43,14 +43,14 @@ end
 function Bash:perform(tile)
 
   local direction = self.unit.coord:getDirectionTo(tile.coord)
-  local startTile = World.instance:get(self.unit.coord)
+  local startTile = Game.instance:get(self.unit.coord)
 
   -- move in direction until stopped
-  local currentTile = World.instance:get(self.unit.coord)
-  local nextTile = World.instance:get(self.unit.coord:add(direction))
+  local currentTile = Game.instance:get(self.unit.coord)
+  local nextTile = Game.instance:get(self.unit.coord:add(direction))
   while nextTile.attackHighlighted and self.unit:place(nextTile.coord) do
     currentTile = nextTile
-    nextTile = World.instance:get(nextTile.coord:add(direction))
+    nextTile = Game.instance:get(nextTile.coord:add(direction))
   end
 
   -- damage any unit that is hit
