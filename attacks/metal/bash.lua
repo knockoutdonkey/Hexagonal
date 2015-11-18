@@ -54,7 +54,7 @@ function Bash:perform(tile)
   end
 
   -- damage any unit that is hit
-  if nextTile.unit and nextTile:getHeight() < currentTile:getHeight() then
+  if nextTile.unit and nextTile:getHeight() <= currentTile:getHeight() then
     nextTile.unit:damage((startTile:getHeight() - currentTile:getHeight() + 1) * self.damage)
   end
 
