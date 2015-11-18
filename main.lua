@@ -1,5 +1,5 @@
 -- Terrain
-World = require('world')
+World = require('World')
 Tile = require('tile')
 
 -- Units
@@ -32,7 +32,9 @@ Storm = require('attacks/waterKnight/storm')
 -- Utilities
 Controller = require('controller')
 ClickManager = require('clickManager')
+SaveManager = require('saveManager')
 HexCoord = require('hexCoord')
+serialize = require('ser')
 
 -- render correctly
 
@@ -43,11 +45,16 @@ function love.load(arg)
   world = World:new()
   controller = Controller:new()
   clickManager = ClickManager:new()
+  saveManager = SaveManager:new()
+
+  love.graphics.setBackgroundColor(120, 170, 255)
 end
 
 local mouseDown = false
 local rDown = false
 local fDown = false
+local gDown = false
+local tDown = false
 function love.update(dt)
 
   if love.mouse.isDown('l') then
@@ -89,6 +96,34 @@ function love.update(dt)
   if love.keyboard.isDown('down') and Tile.tilt > 0 then
     Tile.tilt = Tile.tilt - .01
   end
+
+  if love.keyboard.isDown('t')then
+    if not tDown then
+      controller:tClick(love.mouse.getPosition())
+      tDown = true
+    end
+  else
+    tDown = false
+  end
+
+  if love.keyboard.isDown('g')then
+    if not gDown then
+      controller:gClick(love.mouse.getPosition())
+      gDown = true
+    end
+  else
+    gDown = false
+  end
+
+  if love.keyboard.isDown('s') then
+    SaveManager.instance:saveLevel(World.instance, 1)
+    print('saved')
+  end
+
+  if love.keyboard.isDown('1') then
+    SaveManager.instance:loadLevel(World.instance, 1)
+    print('loaded level 1')
+  end
 end
 
 function love.draw(dt)
@@ -97,5 +132,19 @@ function love.draw(dt)
 
   love.graphics.translate(screenWidth / 2, screenHeigth / 2)
 
-  world:draw()
+  World.instance:draw()
 end
+-- love.filesystem.setIdentity('~/Practice/Lua/Hexagonal')
+
+-- local data = love.filesystem.load('data/saveData.ser')()
+-- data = serialize({x = 1, y = 2})
+-- print(data)
+-- print('saved', love.filesystem.write('data/saveData.ser', data))
+
+if not love.filesystem.exists('saveData.ser') then
+  love.filesystem.newFile('saveData.ser')
+end
+
+local data = serialize({x = 1})
+-- print(love.filesystem.write('saveData.ser', data))
+-- print(love.filesystem.read('saveData.ser'))

@@ -33,6 +33,16 @@ function Controller:fClick(pX, pY)
   World.instance:get(coord):lower()
 end
 
+function Controller:tClick(pX, pY)
+  local coord = self:getScreenCoord(pX, pY)
+  World.instance:get(coord):addWater()
+end
+
+function Controller:gClick(pX, pY)
+  local coord = self:getScreenCoord(pX, pY)
+  World.instance:get(coord):removeWater()
+end
+
 function Controller:getScreenCoord(pX, pY)
   local width = love.graphics:getWidth()
   local height = love.graphics:getHeight()

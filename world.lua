@@ -2,11 +2,13 @@ local World = {}
 
 World.instance = nil
 World.size = 5
+
+-- Generation constants
 World.waterNum = 25
 World.playerUnitNum = 3
 World.enemyUnitNum = 3
 
-function World:new()
+function World:new(worldData)
 
   local obj = {}
   setmetatable(obj, self)
@@ -14,16 +16,8 @@ function World:new()
 
   self.instance = obj
 
-  -- create a grid of the correct size
-  local grid = {}
-  for x = -World.size, World.size do
-    grid[x] = {}
-
-    for y = -World.size, World.size do
-      grid[x][y] = Tile:new(x, y)
-    end
-  end
-  obj.grid = grid
+  obj.deadTile = Tile:new(HexCoord:new(1000, -1000))
+  obj.deadTile:setHeight(100)
 
   obj.playersTurn = true
   obj.playerUnits = {}
@@ -32,12 +26,34 @@ function World:new()
 
   obj.selectedAttack = nil
 
-  obj.deadTile = Tile:new(1000, 0)
-  obj.deadTile:setHeight(1000)
+  -- create grid
+  if worldData then
+    print('creating loaded world')
+    local grid = {}
+    for x = -World.size, World.size do
+      grid[x] = {}
 
-  -- World setup
-  obj:placeWater()
-  obj:placeUnits()
+      for y = -World.size, World.size do
+        grid[x][y] = Tile:new(HexCoord:new(x, y), worldData[x][y].height, worldData[x][y].waterLevel)
+      end
+    end
+    obj.grid = grid
+    obj:placeUnits()
+  else
+    print('creating randomly generated world')
+    local grid = {}
+    for x = -World.size, World.size do
+      grid[x] = {}
+
+      for y = -World.size, World.size do
+        grid[x][y] = Tile:new(HexCoord:new(x, y))
+      end
+    end
+    obj.grid = grid
+
+    obj:placeWater()
+    obj:placeUnits()
+  end
 
   return obj
 end
@@ -273,7 +289,7 @@ function World:transformToCoords(pX, pY)
   local forwardTile = self:get(coord:add(HexCoord:new(1, -1)))
   local newPX, newPY = self:transformToPixels(forwardTile.coord)
 
-  while newPY < pY + Tile.side * .866 do
+  while newPY < pY + Tile.side * .866 and forwardTile ~= self.deadTile do
     coord = forwardTile.coord
     forwardTile = self:get(coord:add(HexCoord:new(1, -1)))
     newPX, newPY = self:transformToPixels(forwardTile.coord)

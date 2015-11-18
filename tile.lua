@@ -5,22 +5,21 @@ Tile.tilt = .8
 Tile.vertical = 1
 Tile.selected = nil
 
-function Tile:new(coordOrX, y)
+function Tile:new(coord, height, waterLevel)
 
   local obj = {}
   setmetatable(obj, self)
   self.__index = self
 
-
   if y then
     -- given x/y parameters
-    obj.coord = HexCoord:new(coordOrX, y)
+    obj.coord = HexCoord:new(coord, y)
   else
     -- given coordinate parameter
-    obj.coord = coordOrX:copy()
+    obj.coord = coord:copy()
   end
 
-  obj.waterLevel = 0
+  obj.waterLevel = waterLevel or 0
 
   obj.item = nil
   obj.unit = nil
@@ -29,7 +28,7 @@ function Tile:new(coordOrX, y)
   obj.attackHighlighted = false
 
   obj.height = 0
-  obj:setHeight(math.random(1, 3)) -- use setter and getter to manipulate
+  obj.height = height or math.random(1, 3) -- use setter and getter to manipulate
 
   return obj
 end
@@ -61,7 +60,7 @@ function Tile:raise()
 end
 
 function Tile:lower()
-  self:setHeight(self:getHeight() - 1)
+  self:setHeight(math.max(self:getHeight() - 1, 0))
 end
 
 function Tile:setHeight(height)
@@ -93,6 +92,16 @@ function Tile:addWater()
   self:iterateWaterFlow()
 end
 
+function Tile:removeWater()
+  while self.waterLevel > 0 do
+    self.waterLevel = 0
+    for i, neighborCoord in ipairs(self.coord:getNeighbors()) do
+      local tile = World.instance:get(neighborCoord)
+      tile:iterateWaterFlow()
+    end
+  end
+end
+
 function Tile:hasWater()
   return self.waterLevel > .3
 end
@@ -112,7 +121,6 @@ function Tile:iterateWaterFlow()
 
     local neighborTile = World.instance:get(neighborCoord)
 
-    -- print(neighborTile:getHeight() + neighborTile.waterLevel + waterQuantum, self:getHeight() + self.waterLevel)
     if neighborTile:getHeight() + neighborTile.waterLevel + waterQuantum < self:getHeight() + self.waterLevel and self.waterLevel > 0 then
 
       neighborTile.waterLevel = neighborTile.waterLevel + waterQuantum
@@ -135,23 +143,23 @@ function Tile:draw()
   -- determine correct color
   local groundColor = {
     r=50,
-    g=50 + 205 / 5 * self:getHeight(),
+    g=50 + 205 / 6 * self:getHeight(),
     b=50,
     a=255
   }
 
   local highlightColor = {r = 0, b = 0, c = 0, a = 0}
   if self.highlighted then
-    highlightColor.r = 70 + 185 / 5 * self:getHeight()
-    highlightColor.g = 75 + 50 / 5 * self:getHeight()
-    highlightColor.b = 70 + 185 / 5 * self:getHeight()
+    highlightColor.r = 70 + 185 / 6 * self:getHeight()
+    highlightColor.g = 75 + 50 / 6 * self:getHeight()
+    highlightColor.b = 70 + 185 / 6 * self:getHeight()
     highlightColor.a = 200
   end
 
   if self.attackHighlighted then
-    highlightColor.r = 150 + 105 / 5 * self:getHeight()
-    highlightColor.g = 50 + 0 / 5 * self:getHeight()
-    highlightColor.b = 50 + 0 / 5 * self:getHeight()
+    highlightColor.r = 150 + 105 / 6 * self:getHeight()
+    highlightColor.g = 50 + 0 / 6 * self:getHeight()
+    highlightColor.b = 50 + 0 / 6 * self:getHeight()
     highlightColor.a = 200
   end
 

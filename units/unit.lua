@@ -52,7 +52,6 @@ function Unit:startTurn()
   self.ready = true
 
   for i, task in ipairs(self.tasks) do
-    print(i, task)
     task(self)
   end
   self.tasks = {}
